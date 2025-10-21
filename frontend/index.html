@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>POS Recovery Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --background: #0F172A;
+            --surface: #1E293B;
+            --text: #F1F5F9;
+            --text-light: #94A3B8;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 24px 0;
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 30px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--text);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 4px;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(99, 102, 241, 0.4);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+        }
+
+        .terminals-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .terminal-item {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .terminal-item:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .terminal-id {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .terminal-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+        }
+
+        .terminal-details {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        #message {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ADE80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .info {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60A5FA;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>POS Recovery Platform</h1>
+                <p>Manage terminal recovery operations</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTerminals">0</div>
+                <div class="stat-label">Total Terminals</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0%</div>
+                <div class="stat-label">Recovery Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Active Campaigns</div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div>
+                <div class="card">
+                    <div class="card-title">Data Management</div>
+                    <div class="upload-area" onclick="document.getElementById('csvFile').click()">
+                        <h3>Upload Terminal Data</h3>
+                        <p>Select your CSV file to upload</p>
+                        <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleFileSelect(event)">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Terminal Inventory</div>
+                    <div class="terminals-list" id="terminalsList">
+                        <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                            No terminals uploaded yet
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Campaign Management</div>
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" id="campaignName" placeholder="Campaign Name">
+                        <textarea id="campaignMessage" placeholder="WhatsApp message template..."></textarea>
+                        <button class="btn" onclick="createCampaign()" style="width: 100%;">Create Campaign</button>
+                    </div>
+                    <div id="campaignsList"></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <div class="card-title">Quick Actions</div>
+                    <button class="btn" onclick="createCampaign()" style="width: 100%; margin: 8px 0;">
+                        Create Campaign
+                    </button>
+                    <button class="btn" onclick="viewContacts()" style="width: 100%; margin: 8px 0;">
+                        View Contacts
+                    </button>
+                    <button class="btn" onclick="openInbox()" style="width: 100%; margin: 8px 0;">
+                        Open Inbox
+                    </button>
+                    <button class="btn" onclick="loadTerminals()" style="width: 100%; margin: 8px 0;">
+                        Refresh Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            if (files.length === 0) return;
+           
+            const file = files[0];
+            if (!file.name.endsWith('.csv')) {
+                showMessage('Please select a CSV file', 'error');
+                return;
+            }
+
+            showMessage('Uploading CSV file...', 'info');
+           
+            const formData = new FormData();
+            formData.append('csvFile', file);
+
+            fetch('http://localhost:3000/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                showMessage('CSV processed successfully - ' + result.records + ' terminals', 'success');
+                document.getElementById('totalTerminals').textContent = result.records;
+                loadTerminals();
+            })
+            .catch(error => {
+                showMessage('Upload error', 'error');
+            });
+        }
+
+        async function loadTerminals() {
+            try {
+                const response = await fetch('http://localhost:3000/terminals');
+                const terminals = await response.json();
+               
+                const list = document.getElementById('terminalsList');
+                if (terminals.length > 0) {
+                    list.innerHTML = terminals.map(terminal =>
+                        `<div class="terminal-item">
+                            <div class="terminal-header">
+                                <div class="terminal-id">${terminal.terminal_id}</div>
+                                <div class="terminal-status">${terminal.status}</div>
+                            </div>
+                            <div class="terminal-details">
+                                <div>${terminal.customer_name}</div>
+                                <div>${terminal.phone}</div>
+                                <div style="margin-top: 8px; font-size: 0.8rem;">${terminal.notes}</div>
+                            </div>
+                        </div>`
+                    ).join('');
+                } else {
+                    list.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-light);">No terminals uploaded yet</div>';
+                }
+            } catch (error) {
+                console.log('Error loading terminals');
+            }
+        }
+
+        async function createCampaign() {
+            const name = document.getElementById('campaignName').value;
+            const message = document.getElementById('campaignMessage').value;
+           
+            if (!name || !message) {
+                showMessage('Please fill in campaign name and message', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/create-campaign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+    name: name,
+    segment_id: "default-segment",
+    retry_policy: { steps: [] },
+    schedule: {},
+    message: message
+}) 
+                });
+               
+                const result = await response.json();
+                if (result.campaignId) {
+                    showMessage('Campaign created successfully', 'success');
+                    document.getElementById('campaignName').value = '';
+                    document.getElementById('campaignMessage').value = '';
+                    loadCampaigns();
+                } else {
+                    showMessage('Failed to create campaign', 'error');
+                }
+            } catch (error) {
+                showMessage('Error creating campaign', 'error');
+            }
+        }
+
+        async function loadCampaigns() {
+            try {
+                const response = await fetch('http://localhost:3000/campaigns');
+                const campaigns = await response.json();
+               
+                const list = document.getElementById('campaignsList');
+                if (campaigns.length > 0) {
+                    list.innerHTML = campaigns.map(campaign =>
+                        `<div class="terminal-item">
+                            <div class="terminal-header">
+                                <div class="terminal-id">${campaign.name}</div>
+                                <div class="terminal-status">${campaign.status}</div>
+                            </div>
+                            <div class="terminal-details">
+                                <div>${campaign.message}</div>
+                                <div style="margin-top: 8px; font-size: 0.8rem;">Created: ${new Date(campaign.created_at).toLocaleDateString()}</div>
+                            </div>
+                        </div>`
+                    ).join('');
+                } else {
+                    list.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-light);">No campaigns created yet</div>';
+                }
+            } catch (error) {
+                console.log('Error loading campaigns');
+            }
+        }
+
+        function viewContacts() {
+            showMessage('Contact management coming soon', 'info');
+        }
+
+        function openInbox() {
+            showMessage('Inbox system coming soon', 'info');
+        }
+
+        function showMessage(msg, type) {
+            const m = document.getElementById('message');
+            m.textContent = msg;
+            m.className = type;
+            m.style.display = 'block';
+            setTimeout(() => {
+                m.style.display = 'none';
+            }, 3000);
+        }
+
+        loadTerminals();
+        loadCampaigns();
+    </script>
+</body>
+</html> 
