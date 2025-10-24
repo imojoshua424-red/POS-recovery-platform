@@ -1,452 +1,402 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS Recovery Platform</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-        :root {
-            --primary: #6366F1;
-            --primary-dark: #4F46E5;
-            --background: #0F172A;
-            --surface: #1E293B;
-            --text: #F1F5F9;
-            --text-light: #94A3B8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: var(--background);
-            color: var(--text);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-        }
-
-        .header {
-            background: var(--surface);
-            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
-            padding: 24px 0;
-        }
-
-        .header-content {
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            color: var(--text-light);
-            font-size: 1.1rem;
+            padding: 20px;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 24px;
+        .header {
+            text-align: center;
             margin-bottom: 40px;
         }
 
-        .stat-card {
-            background: var(--surface);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 16px;
-            padding: 32px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-        }
-
-        .stat-number {
+        .header h1 {
+            color: white;
             font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
-        .stat-label {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            font-weight: 500;
+        .header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1rem;
         }
 
-        .dashboard {
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
         .card {
-            background: var(--surface);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 16px;
-            padding: 32px;
-            margin-bottom: 30px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 24px;
-            color: var(--text);
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
-        .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin: 4px;
+        .stat-card {
+            text-align: center;
         }
 
-        .btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 15px 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1rem;
         }
 
         .upload-area {
-            border: 2px dashed rgba(99, 102, 241, 0.4);
-            border-radius: 12px;
-            padding: 40px;
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px 20px;
             text-align: center;
-            transition: all 0.3s ease;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .upload-area:hover {
-            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #764ba2;
         }
 
-        .terminals-list {
-            max-height: 400px;
-            overflow-y: auto;
+        .upload-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
         }
 
-        .terminal-item {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(99, 102, 241, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 12px;
+        .upload-text {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .terminal-item:hover {
-            border-color: rgba(99, 102, 241, 0.3);
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
         }
 
-        .terminal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .terminal-id {
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .terminal-status {
-            padding: 4px 12px;
+        .terminals-section {
+            background: white;
             border-radius: 20px;
-            font-size: 0.75rem;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .terminals-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .terminals-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
             font-weight: 600;
-            background: rgba(245, 158, 11, 0.2);
-            color: #F59E0B;
         }
 
-        .terminal-details {
-            color: var(--text-light);
-            font-size: 0.9rem;
+        .terminals-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
         }
 
-        #message {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 12px;
-            font-weight: 500;
+        .terminals-table tr:hover {
+            background: #f8f9ff;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-inactive {
+            background: #ffeaa7;
+            color: #e17055;
+        }
+
+        .status-active {
+            background: #55efc4;
+            color: #00b894;
+        }
+
+        .file-input {
             display: none;
         }
 
-        .success {
-            background: rgba(34, 197, 94, 0.1);
-            color: #4ADE80;
-            border: 1px solid rgba(34, 197, 94, 0.3);
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            font-size: 1.1rem;
         }
 
-        .error {
-            background: rgba(239, 68, 68, 0.1);
-            color: #F87171;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .info {
-            background: rgba(59, 130, 246, 0.1);
-            color: #60A5FA;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 8px;
-            background: var(--surface);
-            color: var(--text);
-        }
-
-        textarea {
-            height: 100px;
-            resize: vertical;
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+           
+            .header h1 {
+                font-size: 2rem;
+            }
+           
+            .stat-number {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container">
-            <div class="header-content">
-                <h1>POS Recovery Platform</h1>
-                <p>Manage terminal recovery operations</p>
-            </div>
-        </div>
-    </div>
-
     <div class="container">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="totalTerminals">0</div>
+        <div class="header">
+            <h1>POS Recovery Platform</h1>
+            <p>Manage and recover inactive POS terminals efficiently</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card stat-card">
                 <div class="stat-label">Total Terminals</div>
+                <div class="stat-number" id="total-terminals">0</div>
+                <div class="stat-label">In System</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">0%</div>
-                <div class="stat-label">Recovery Rate</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">0</div>
+
+            <div class="card stat-card">
                 <div class="stat-label">Active Campaigns</div>
+                <div class="stat-number" id="active-campaigns">0</div>
+                <div class="stat-label">Running</div>
             </div>
-        </div>
 
-        <div class="dashboard">
-            <div>
-                <div class="card">
-                    <div class="card-title">Data Management</div>
-                    <div class="upload-area" onclick="document.getElementById('csvFile').click()">
+            <div class="card stat-card">
+                <div class="stat-label">Recovery Rate</div>
+                <div class="stat-number" id="recovery-rate">0%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+
+            <div class="card">
+                <div class="upload-area" onclick="document.getElementById('csvFile').click()">
+                    <div class="upload-icon"></div>
+                    <div class="upload-text">
                         <h3>Upload Terminal Data</h3>
-                        <p>Select your CSV file to upload</p>
-                        <input type="file" id="csvFile" accept=".csv" style="display:none" onchange="handleFileSelect(event)">
+                        <p>Click here or drag & drop your CSV file</p>
                     </div>
+                    <input type="file" id="csvFile" class="file-input" accept=".csv">
+                    <button class="btn" onclick="document.getElementById('csvFile').click()">Choose File</button>
                 </div>
-
-                <div class="card">
-                    <div class="card-title">Terminal Inventory</div>
-                    <div class="terminals-list" id="terminalsList">
-                        <div style="text-align: center; padding: 40px; color: var(--text-light);">
-                            No terminals uploaded yet
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title">Campaign Management</div>
-                    <div style="margin-bottom: 20px;">
-                        <input type="text" id="campaignName" placeholder="Campaign Name">
-                        <textarea id="campaignMessage" placeholder="WhatsApp message template..."></textarea>
-                        <button class="btn" onclick="createCampaign()" style="width: 100%;">Create Campaign</button>
-                    </div>
-                    <div id="campaignsList"></div>
-                </div>
-            </div>
-
-            <div>
-                <div class="card">
-                    <div class="card-title">Quick Actions</div>
-                    <button class="btn" onclick="createCampaign()" style="width: 100%; margin: 8px 0;">
-                        Create Campaign
-                    </button>
-                    <button class="btn" onclick="viewContacts()" style="width: 100%; margin: 8px 0;">
-                        View Contacts
-                    </button>
-                    <button class="btn" onclick="openInbox()" style="width: 100%; margin: 8px 0;">
-                        Open Inbox
-                    </button>
-                    <button class="btn" onclick="loadTerminals()" style="width: 100%; margin: 8px 0;">
-                        Refresh Data
-                    </button>
-                </div>
+                <div class="loading" id="loading">Uploading...</div>
             </div>
         </div>
 
-        <div id="message"></div>
+        <div class="terminals-section">
+            <h2 class="section-title">Terminal Inventory</h2>
+            <table class="terminals-table">
+                <thead>
+                    <tr>
+                        <th>Terminal ID</th>
+                        <th>Customer Name</th>
+                        <th>Phone Number</th>
+                        <th>Status</th>
+                        <th>Last Active</th>
+                    </tr>
+                </thead>
+                <tbody id="terminals-body">
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: #666;">
+                            No terminals uploaded yet. Upload a CSV file to get started.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        function handleFileSelect(event) {
-            const files = event.target.files;
-            if (files.length === 0) return;
-           
-            const file = files[0];
-            if (!file.name.endsWith('.csv')) {
-                showMessage('Please select a CSV file', 'error');
+        const API_URL = 'https://pos-recovery-backend.onrender.com';
+        let terminals = [];
+
+        document.getElementById('csvFile').addEventListener('change', uploadCSV);
+
+        async function uploadCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const csvText = e.target.result;
+                    const lines = csvText.split('\n');
+                    const contacts = [];
+                    const terminalsData = [];
+                   
+                    // Process CSV
+                    for (let i = 1; i < lines.length; i++) {
+                        const columns = lines[i].split(',');
+                        if (columns.length >= 3 && columns[0].trim()) {
+                            contacts.push({
+                                name: columns[0].trim(),
+                                phone: columns[1].trim()
+                            });
+                            terminalsData.push({
+                                terminal_id: columns[2].trim(),
+                                status: 'inactive',
+                                last_active: '2024-01-15'
+                            });
+                        }
+                    }
+
+                    // Send to backend
+                    const response = await fetch(API_URL + '/api/upload-contacts', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contacts, terminals: terminalsData })
+                    });
+                   
+                    const result = await response.json();
+                   
+                    if (result.success) {
+                        terminals = terminalsData;
+                        updateDashboard();
+                        showNotification('CSV uploaded successfully!', 'success');
+                    } else {
+                        showNotification('Upload failed: ' + result.error, 'error');
+                    }
+                } catch (error) {
+                    showNotification('Upload error: ' + error.message, 'error');
+                } finally {
+                    loading.style.display = 'none';
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function updateDashboard() {
+            // Update metrics
+            document.getElementById('total-terminals').textContent = terminals.length;
+            document.getElementById('active-campaigns').textContent = '0';
+            document.getElementById('recovery-rate').textContent = '0%';
+
+            // Update table
+            const tbody = document.getElementById('terminals-body');
+            tbody.innerHTML = '';
+
+            if (terminals.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: #666;">
+                            No terminals uploaded yet. Upload a CSV file to get started.
+                        </td>
+                    </tr>
+                `;
                 return;
             }
 
-            showMessage('Uploading CSV file...', 'info');
-           
-            const formData = new FormData();
-            formData.append('csvFile', file);
-
-            fetch('http://pos-recovery-backend.onrender.com', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                showMessage('CSV processed successfully - ' + result.records + ' terminals', 'success');
-                document.getElementById('totalTerminals').textContent = result.records;
-                loadTerminals();
-            })
-            .catch(error => {
-                showMessage('Upload error', 'error');
+            terminals.forEach(terminal => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${terminal.terminal_id}</td>
+                    <td>Customer ${terminal.terminal_id}</td>
+                    <td>+234 XXX XXX XXXX</td>
+                    <td><span class="status-badge status-inactive">Inactive</span></td>
+                    <td>${terminal.last_active}</td>
+                `;
+                tbody.appendChild(row);
             });
         }
 
-        async function loadTerminals() {
-            try {
-                const response = await fetch('http://pos-recovery-backend.onrender.com'/terminals');
-                const terminals = await response.json();
-               
-                const list = document.getElementById('terminalsList');
-                if (terminals.length > 0) {
-                    list.innerHTML = terminals.map(terminal =>
-                        `<div class="terminal-item">
-                            <div class="terminal-header">
-                                <div class="terminal-id">${terminal.terminal_id}</div>
-                                <div class="terminal-status">${terminal.status}</div>
-                            </div>
-                            <div class="terminal-details">
-                                <div>${terminal.customer_name}</div>
-                                <div>${terminal.phone}</div>
-                                <div style="margin-top: 8px; font-size: 0.8rem;">${terminal.notes}</div>
-                            </div>
-                        </div>`
-                    ).join('');
-                } else {
-                    list.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-light);">No terminals uploaded yet</div>';
-                }
-            } catch (error) {
-                console.log('Error loading terminals');
-            }
-        }
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 10px;
+                color: white;
+                font-weight: bold;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                background: ${type === 'success' ? '#00b894' : '#e17055'};
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
 
-        async function createCampaign() {
-            const name = document.getElementById('campaignName').value;
-            const message = document.getElementById('campaignMessage').value;
-           
-            if (!name || !message) {
-                showMessage('Please fill in campaign name and message', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch('http://pos-recovery-backend.onrender.com'/create-campaign', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-    name: name,
-    segment_id: "default-segment",
-    retry_policy: { steps: [] },
-    schedule: {},
-    message: message
-}) 
-                });
-               
-                const result = await response.json();
-                if (result.campaignId) {
-                    showMessage('Campaign created successfully', 'success');
-                    document.getElementById('campaignName').value = '';
-                    document.getElementById('campaignMessage').value = '';
-                    loadCampaigns();
-                } else {
-                    showMessage('Failed to create campaign', 'error');
-                }
-            } catch (error) {
-                showMessage('Error creating campaign', 'error');
-            }
-        }
-
-        async function loadCampaigns() {
-            try {
-                const response = await fetch('http://pos-recovery-backend.onrender.com');
-                const campaigns = await response.json();
-               
-                const list = document.getElementById('campaignsList');
-                if (campaigns.length > 0) {
-                    list.innerHTML = campaigns.map(campaign =>
-                        `<div class="terminal-item">
-                            <div class="terminal-header">
-                                <div class="terminal-id">${campaign.name}</div>
-                                <div class="terminal-status">${campaign.status}</div>
-                            </div>
-                            <div class="terminal-details">
-                                <div>${campaign.message}</div>
-                                <div style="margin-top: 8px; font-size: 0.8rem;">Created: ${new Date(campaign.created_at).toLocaleDateString()}</div>
-                            </div>
-                        </div>`
-                    ).join('');
-                } else {
-                    list.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-light);">No campaigns created yet</div>';
-                }
-            } catch (error) {
-                console.log('Error loading campaigns');
-            }
-        }
-
-        function viewContacts() {
-            showMessage('Contact management coming soon', 'info');
-        }
-
-        function openInbox() {
-            showMessage('Inbox system coming soon', 'info');
-        }
-
-        function showMessage(msg, type) {
-            const m = document.getElementById('message');
-            m.textContent = msg;
-            m.className = type;
-            m.style.display = 'block';
+            // Remove after 3 seconds
             setTimeout(() => {
-                m.style.display = 'none';
+                notification.remove();
             }, 3000);
         }
 
-        loadTerminals();
-        loadCampaigns();
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initial load
+        updateDashboard();
     </script>
 </body>
 </html> 
