@@ -321,7 +321,7 @@
             const formData = new FormData();
             formData.append('csvFile', file);
 
-            fetch('http://localhost:3000/upload', {
+            fetch('http://pos-recovery-backend.onrender.com', {
                 method: 'POST',
                 body: formData
             })
@@ -338,7 +338,7 @@
 
         async function loadTerminals() {
             try {
-                const response = await fetch('http://localhost:3000/terminals');
+                const response = await fetch('http://pos-recovery-backend.onrender.com'/terminals');
                 const terminals = await response.json();
                
                 const list = document.getElementById('terminalsList');
@@ -374,7 +374,7 @@
             }
 
             try {
-                const response = await fetch('http://localhost:3000/create-campaign', {
+                const response = await fetch('http://pos-recovery-backend.onrender.com'/create-campaign', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -402,7 +402,7 @@
 
         async function loadCampaigns() {
             try {
-                const response = await fetch('http://localhost:3000/campaigns');
+                const response = await fetch('http://pos-recovery-backend.onrender.com');
                 const campaigns = await response.json();
                
                 const list = document.getElementById('campaignsList');
