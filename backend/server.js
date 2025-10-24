@@ -16,9 +16,7 @@ app.post('/api/upload-contacts', (req, res) => {
     terminals = newTerminals || [];
     res.json({
       success: true,
-      message: `Uploaded ${contacts.length} contacts and ${terminals.length} terminals`,
-      contacts: contacts,
-      terminals: terminals
+      message: `Uploaded ${contacts.length} contacts and ${terminals.length} terminals`
     });
   } catch (error) {
     res.json({ success: false, error: error.message });
@@ -26,7 +24,7 @@ app.post('/api/upload-contacts', (req, res) => {
 });
 
 app.get('/api/contacts', (req, res) => {
-  res.json({ contacts, terminals });
+  res.json({ contacts: contacts, terminals: terminals });
 });
 
 app.post('/api/create-campaign', (req, res) => {
