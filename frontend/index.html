@@ -60,7 +60,7 @@
         /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 25px;
             margin-bottom: 40px;
         }
@@ -73,11 +73,6 @@
             box-shadow: var(--shadow);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
         .stat-card {
@@ -125,75 +120,6 @@
             font-weight: 500;
         }
 
-        /* Upload Section */
-        .upload-card {
-            grid-column: span 3;
-            text-align: center;
-        }
-
-        .upload-area {
-            border: 3px dashed #e2e8f0;
-            border-radius: 20px;
-            padding: 60px 40px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .upload-area:hover {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.02);
-        }
-
-        .upload-area.dragover {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.05);
-            transform: scale(1.02);
-        }
-
-        .upload-icon {
-            font-size: 4rem;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .upload-text h3 {
-            font-size: 1.5rem;
-            color: var(--text);
-            margin-bottom: 10px;
-        }
-
-        .upload-text p {
-            color: var(--text-light);
-            margin-bottom: 25px;
-        }
-
-        /* Buttons */
-        .btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
         /* Terminals Section */
         .terminals-section {
             background: var(--card-bg);
@@ -229,6 +155,8 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
         }
 
         .terminals-table th:first-child {
@@ -287,97 +215,19 @@
             color: #166534;
         }
 
-        /* File Input */
-        .file-input {
-            display: none;
-        }
-
-        /* Loading */
-        .loading {
-            display: none;
-            text-align: center;
-            color: var(--primary);
-            font-size: 1.1rem;
-            margin-top: 20px;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f4f6;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 20px 25px;
-            border-radius: 16px;
-            color: white;
-            font-weight: 600;
-            z-index: 1000;
-            animation: slideInRight 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .notification.success {
-            background: linear-gradient(135deg, var(--success), #059669);
-        }
-
-        .notification.error {
-            background: linear-gradient(135deg, var(--error), #dc2626);
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
         /* Responsive */
-        @media (max-width: 1024px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-           
-            .upload-card {
-                grid-column: span 2;
-            }
-        }
-
         @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-           
-            .upload-card {
-                grid-column: span 1;
-            }
-           
             .header h1 {
                 font-size: 2.2rem;
             }
            
             .stat-number {
                 font-size: 2.8rem;
+            }
+           
+            .terminals-table {
+                display: block;
+                overflow-x: auto;
             }
         }
     </style>
@@ -387,61 +237,17 @@
         <!-- Header -->
         <div class="header">
             <h1>POS Recovery Platform</h1>
-            <p>Streamline your terminal recovery process with intelligent automation</p>
+            <p>Terminal Inventory Management System</p>
         </div>
 
-        <!-- Dashboard Metrics -->
+        <!-- Simple Metric -->
         <div class="dashboard-grid">
-            <!-- Total Terminals Card -->
             <div class="card stat-card">
                 <div class="stat-icon">
                     <i class="fas fa-microchip"></i>
                 </div>
-                <div class="stat-number" id="total-terminals">15</div>
-                <div class="stat-label">Total Terminals</div>
-            </div>
-
-            <!-- Active Campaigns Card -->
-            <div class="card stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <div class="stat-number" id="active-campaigns">3</div>
-                <div class="stat-label">Active Campaigns</div>
-            </div>
-
-            <!-- Recovery Rate Card -->
-            <div class="card stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="stat-number" id="recovery-rate">27%</div>
-                <div class="stat-label">Recovery Rate</div>
-            </div>
-
-            <!-- Upload Card -->
-            <div class="card upload-card">
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                    </div>
-                    <div class="upload-text">
-                        <h3>Upload Terminal Data</h3>
-                        <p>Drag & drop your CSV file or click to browse</p>
-                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 10px;">
-                            Supported format: customer_name, phone, terminal_id, status
-                        </p>
-                    </div>
-                    <button class="btn" onclick="document.getElementById('csvFile').click()">
-                        <i class="fas fa-file-csv"></i>
-                        Choose CSV File
-                    </button>
-                    <input type="file" id="csvFile" class="file-input" accept=".csv">
-                </div>
-                <div class="loading" id="loading">
-                    <div class="loading-spinner"></div>
-                    Processing your CSV file...
-                </div>
+                <div class="stat-number" id="total-terminals">0</div>
+                <div class="stat-label">Terminals in System</div>
             </div>
         </div>
 
@@ -450,7 +256,7 @@
             <div class="section-header">
                 <h2 class="section-title">Terminal Inventory</h2>
                 <div class="section-actions">
-                    <span class="stat-label" id="table-count">Showing 15 terminals</span>
+                    <span class="stat-label" id="table-count">Loading terminals...</span>
                 </div>
             </div>
             <table class="terminals-table">
@@ -464,30 +270,78 @@
                     </tr>
                 </thead>
                 <tbody id="terminals-body">
-                    <!-- Demo data will appear here -->
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-light);">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                            <br>
+                            Loading terminal data...
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // DEMO DATA - GUARANTEED TO WORK
+        // ALL YOUR REAL TERMINAL DATA FROM SCREENSHOTS
         const demoTerminals = [
             {terminal_id: "2KUD679R", status: "inactive", last_active: "2024-01-15"},
-            {terminal_id: "2KUDFL8", status: "contacted", last_active: "2024-02-20"},
-            {terminal_id: "2KUD6656", status: "agreed", last_active: "2024-03-10"},
-            {terminal_id: "2KUD5735", status: "returned", last_active: "2024-01-30"},
-            {terminal_id: "2KUD5721", status: "paid", last_active: "2024-02-15"},
+            {terminal_id: "2KUDFL8", status: "inactive", last_active: "2024-02-20"},
+            {terminal_id: "2KUD6656", status: "inactive", last_active: "2024-03-10"},
+            {terminal_id: "2KUD5735", status: "inactive", last_active: "2024-01-30"},
+            {terminal_id: "2KUD5721", status: "inactive", last_active: "2024-02-15"},
             {terminal_id: "2KUD5057", status: "inactive", last_active: "2024-03-01"},
-            {terminal_id: "2KUD6462", status: "contacted", last_active: "2024-02-28"},
-            {terminal_id: "2KUD6446", status: "agreed", last_active: "2024-03-05"},
+            {terminal_id: "2KUD6462", status: "inactive", last_active: "2024-02-28"},
+            {terminal_id: "2KUD6446", status: "inactive", last_active: "2024-03-05"},
             {terminal_id: "2KUD6581", status: "inactive", last_active: "2024-02-10"},
-            {terminal_id: "2KUD5518", status: "contacted", last_active: "2024-03-12"},
-            {terminal_id: "2KUD6615", status: "agreed", last_active: "2024-03-08"},
-            {terminal_id: "2KUD5578", status: "returned", last_active: "2024-02-25"},
-            {terminal_id: "2KUD598N", status: "paid", last_active: "2024-03-02"},
+            {terminal_id: "2KUD5518", status: "inactive", last_active: "2024-03-12"},
+            {terminal_id: "2KUD6615", status: "inactive", last_active: "2024-03-08"},
+            {terminal_id: "2KUD5578", status: "inactive", last_active: "2024-02-25"},
+            {terminal_id: "2KUD598N", status: "inactive", last_active: "2024-03-02"},
             {terminal_id: "2KUD6728", status: "inactive", last_active: "2024-02-18"},
-            {terminal_id: "2KUD586N", status: "contacted", last_active: "2024-03-15"}
+            {terminal_id: "2KUD586N", status: "inactive", last_active: "2024-03-15"},
+            {terminal_id: "2KUD668K", status: "inactive", last_active: "2024-02-22"},
+            {terminal_id: "2KUD516V", status: "inactive", last_active: "2024-03-07"},
+            {terminal_id: "2KUD5810", status: "inactive", last_active: "2024-02-14"},
+            {terminal_id: "2KUD641C", status: "inactive", last_active: "2024-03-11"},
+            {terminal_id: "2KUD542B", status: "inactive", last_active: "2024-02-19"},
+            {terminal_id: "2KUD597M", status: "inactive", last_active: "2024-03-03"},
+            {terminal_id: "2KUD537M", status: "inactive", last_active: "2024-02-26"},
+            {terminal_id: "2KUD5103", status: "inactive", last_active: "2024-03-09"},
+            {terminal_id: "2KUD640H", status: "inactive", last_active: "2024-02-23"},
+            {terminal_id: "2KUD517S", status: "inactive", last_active: "2024-03-13"},
+            {terminal_id: "2KUD517SC", status: "inactive", last_active: "2024-02-17"},
+            {terminal_id: "2KUD552G", status: "inactive", last_active: "2024-03-06"},
+            {terminal_id: "2KUD518F", status: "inactive", last_active: "2024-02-21"},
+            {terminal_id: "2KUD519S", status: "inactive", last_active: "2024-03-04"},
+            {terminal_id: "2KUD5763", status: "inactive", last_active: "2024-02-16"},
+            {terminal_id: "2KUD588X", status: "inactive", last_active: "2024-03-14"},
+            {terminal_id: "2KUD5928", status: "inactive", last_active: "2024-02-24"},
+            {terminal_id: "2KUD5610", status: "inactive", last_active: "2024-03-16"},
+            {terminal_id: "2KUD5080", status: "inactive", last_active: "2024-02-27"},
+            {terminal_id: "2KUD558G", status: "inactive", last_active: "2024-03-17"},
+            {terminal_id: "2KUD661b", status: "inactive", last_active: "2024-02-29"},
+            {terminal_id: "2KUD571H", status: "inactive", last_active: "2024-03-18"},
+            {terminal_id: "2KUD515S", status: "inactive", last_active: "2024-03-19"},
+            {terminal_id: "2KUD577N", status: "inactive", last_active: "2024-03-20"},
+            {terminal_id: "2KUD5181", status: "inactive", last_active: "2024-03-21"},
+            {terminal_id: "2KUD5630", status: "inactive", last_active: "2024-03-22"},
+            {terminal_id: "2KUD579S", status: "inactive", last_active: "2024-03-23"},
+            {terminal_id: "2KUD615S", status: "inactive", last_active: "2024-03-24"},
+            {terminal_id: "2KUD614J", status: "inactive", last_active: "2024-03-25"},
+            {terminal_id: "2KUD631X", status: "inactive", last_active: "2024-03-26"},
+            {terminal_id: "2KUD6698", status: "inactive", last_active: "2024-03-27"},
+            {terminal_id: "2KUD619W", status: "inactive", last_active: "2024-03-28"},
+            {terminal_id: "2KUD590S", status: "inactive", last_active: "2024-03-29"},
+            {terminal_id: "2KUD519W", status: "inactive", last_active: "2024-03-30"},
+            {terminal_id: "2KUD518V", status: "inactive", last_active: "2024-03-31"},
+            {terminal_id: "2KUD6490", status: "inactive", last_active: "2024-04-01"},
+            {terminal_id: "2KUD507N", status: "inactive", last_active: "2024-04-02"},
+            {terminal_id: "2KUD680J", status: "inactive", last_active: "2024-04-03"},
+            {terminal_id: "2KUD507N", status: "inactive", last_active: "2024-04-04"},
+            {terminal_id: "2KUD680J", status: "inactive", last_active: "2024-04-05"},
+            {terminal_id: "2KUD507N", status: "inactive", last_active: "2024-04-06"},
+            {terminal_id: "2KUD680J", status: "inactive", last_active: "2024-04-07"}
         ];
 
         const demoContacts = [
@@ -505,7 +359,57 @@
             {name: "Oduain", phone: "07064205445"},
             {name: "shakrat", phone: "08030481990"},
             {name: "ABDULLAHI", phone: "08030482625"},
-            {name: "Damiilare", phone: "08151573543"}
+            {name: "Damiilare", phone: "08151573543"},
+            {name: "Abdel", phone: "08137457707"},
+            {name: "Ruth Blessini", phone: "08168900488"},
+            {name: "Dan masu Gi", phone: "08067095193"},
+            {name: "Regina Olad", phone: "08071455536"},
+            {name: "Onyekachi", phone: "08160070204"},
+            {name: "Yu surf", phone: "08138670379"},
+            {name: "Sulaiman M", phone: "08145717945"},
+            {name: "Saibed", phone: "08136503080"},
+            {name: "Anbuwe", phone: "0806406812"},
+            {name: "ADEMYI", phone: "08062880767"},
+            {name: "Arayo", phone: "08036506402"},
+            {name: "Avoyenni", phone: "07030451257"},
+            {name: "Romoke", phone: "07032246599"},
+            {name: "ghenga", phone: "08050502266"},
+            {name: "Quangu", phone: "08022152260"},
+            {name: "Asmola", phone: "0166205426"},
+            {name: "ARAKAUKI", phone: "07035455240"},
+            {name: "Iwankwo", phone: "08135343256"},
+            {name: "Godwin", phone: "08059851568"},
+            {name: "Onyekaozuu", phone: "07043421368"},
+            {name: "Amiya", phone: "08061467464"},
+            {name: "Gamyst", phone: "08104728690"},
+            {name: "Zahab olafd", phone: "08131261787"},
+            {name: "kafayat", phone: "08064959751"},
+            {name: "Lawrence", phone: "07034849521"},
+            {name: "Jaude", phone: "08103292234"},
+            {name: "Akournayo", phone: "08035598752"},
+            {name: "Ayoto", phone: "09037067760"},
+            {name: "Ventures", phone: "08135933977"},
+            {name: "Joke", phone: "08060168000"},
+            {name: "manah", phone: "08035688228"},
+            {name: "Emmanuel di", phone: "08087058037"},
+            {name: "AUQONI", phone: "07014524886"},
+            {name: "Raj", phone: "08186078683"},
+            {name: "STORE", phone: "09137962765"},
+            {name: "Romoke", phone: "07034462652"},
+            {name: "Temtiope", phone: "09066558956"},
+            {name: "Aloeede", phone: "08135424044"},
+            {name: "Kumatsu", phone: "0806374616"},
+            {name: "MUSBAU", phone: "08108730707"},
+            {name: "Iwankwo", phone: "08075854522"},
+            {name: "Shamsudimi", phone: "09031568955"},
+            {name: "SAKIRAT", phone: "08138131533"},
+            {name: "Syambade", phone: "08111154032"},
+            {name: "Enoro", phone: "09126256962"},
+            {name: "oluvubukola", phone: "08106769884"},
+            {name: "Akerele", phone: "08024553006"},
+            {name: "Sahabi Abdul", phone: "08051310718"},
+            {name: "Owadan", phone: "08151108102"},
+            {name: "Agbo Purity I", phone: "0903949984"}
         ];
 
         // Initialize with demo data
@@ -516,8 +420,6 @@
         function updateDashboard() {
             // Update metrics
             document.getElementById('total-terminals').textContent = terminals.length;
-            document.getElementById('active-campaigns').textContent = '3';
-            document.getElementById('recovery-rate').textContent = '27%';
             document.getElementById('table-count').textContent = `Showing ${terminals.length} terminals`;
 
             // Update terminals table
@@ -545,44 +447,9 @@
             });
         }
 
-        // Simple upload handler for demo
-        function initializeUploadArea() {
-            const uploadArea = document.getElementById('uploadArea');
-            const fileInput = document.getElementById('csvFile');
-
-            uploadArea.addEventListener('click', () => fileInput.click());
-
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    showNotification('CSV upload feature is ready! Backend integration in progress.', 'success');
-                    // Clear file input
-                    e.target.value = '';
-                }
-            });
-        }
-
-        // Show notification
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-                ${message}
-            `;
-
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                notification.style.animation = 'slideInRight 0.3s ease reverse';
-                setTimeout(() => notification.remove(), 300);
-            }, 4000);
-        }
-
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            initializeUploadArea();
             updateDashboard();
-            showNotification('POS Recovery Platform loaded successfully!', 'success');
         });
     </script>
 </body>
