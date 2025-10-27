@@ -465,9 +465,21 @@
         // Configuration - UPDATE THIS WITH YOUR BACKEND URL
         const API_URL = 'https://pos-recovery-platform-1.onrender.com';
        
-        // Global data storage
-        let terminals = [];
-        let contacts = [];
+        // Global data storage - TEMPORARY DEMO DATA
+let terminals = [
+    {terminal_id: "2KUD679R", status: "inactive", last_active: "2024-01-15"},
+    {terminal_id: "2KUDFL8", status: "inactive", last_active: "2024-02-20"},
+    {terminal_id: "2KUD6656", status: "inactive", last_active: "2024-03-10"},
+    {terminal_id: "2KUD5735", status: "inactive", last_active: "2024-01-30"},
+    {terminal_id: "2KUD5721", status: "inactive", last_active: "2024-02-15"}
+];
+let contacts = [
+    {name: "Muhammad", phone: "08088573438"},
+    {name: "Raimi Mustik", phone: "07049416750"},
+    {name: "UCPOS", phone: "08168608666"},
+    {name: "Naimat Rasa", phone: "0704954719"},
+    {name: "Joshua", phone: "08037652476"}
+]; 
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
