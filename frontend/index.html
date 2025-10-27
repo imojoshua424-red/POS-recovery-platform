@@ -153,6 +153,177 @@
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
 
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Campaign Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 25px 30px;
+            border-radius: 24px 24px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        .template-preview {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .template-variables {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .variable-tag {
+            background: var(--primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .campaign-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .campaign-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #e2e8f0;
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
         /* Upload Section */
         .upload-area {
             border: 3px dashed #e2e8f0;
@@ -354,6 +525,20 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+            }
+
+            .campaign-steps {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .campaign-steps::before {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -427,7 +612,7 @@
                     Campaign Actions
                 </div>
                 <div class="action-buttons">
-                    <button class="btn btn-success" onclick="createCampaign()">
+                    <button class="btn btn-success" onclick="openCampaignCreator()">
                         <i class="fas fa-plus"></i>
                         Create Campaign
                     </button>
@@ -490,6 +675,125 @@
         </div>
     </div>
 
+    <!-- Campaign Creator Modal -->
+    <div id="campaignModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create WhatsApp Recovery Campaign</h2>
+                <button class="close-modal" onclick="closeCampaignCreator()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="campaign-steps">
+                    <div class="step active" id="step1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Select Terminals</div>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Compose Message</div>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Schedule & Send</div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Select Terminals -->
+                <div id="step1-content" class="step-content">
+                    <div class="form-group">
+                        <label class="form-label">Select Terminals to Contact</label>
+                        <div style="max-height: 300px; overflow-y: auto; border: 2px solid #e2e8f0; border-radius: 12px; padding: 15px;">
+                            <div id="terminals-checklist">
+                                <!-- Terminals will be populated here -->
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-light);">
+                            <i class="fas fa-info-circle"></i>
+                            Selected: <span id="selected-count">0</span> terminals
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 30px;">
+                        <button class="btn btn-secondary" onclick="closeCampaignCreator()">Cancel</button>
+                        <button class="btn" onclick="goToStep(2)">Next: Compose Message</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Compose Message -->
+                <div id="step2-content" class="step-content" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Message Template</label>
+                        <select class="form-select" id="templateSelect" onchange="loadTemplate()">
+                            <option value="">Select a template...</option>
+                            <option value="recovery_initial">Initial Recovery Offer</option>
+                            <option value="recovery_reminder">Recovery Reminder</option>
+                            <option value="custom">Custom Message</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Message Content</label>
+                        <textarea class="form-textarea" id="messageContent" placeholder="Compose your WhatsApp message here..." oninput="updatePreview()"></textarea>
+                        <div class="template-variables">
+                            <span class="variable-tag" onclick="insertVariable('{customer_name}')">{customer_name}</span>
+                            <span class="variable-tag" onclick="insertVariable('{terminal_id}')">{terminal_id}</span>
+                            <span class="variable-tag" onclick="insertVariable('{incentive_amount}')">{incentive_amount}</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Message Preview</label>
+                        <div class="template-preview" id="messagePreview">
+                            Your message will appear here...
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: space-between; margin-top: 30px;">
+                        <button class="btn btn-secondary" onclick="goToStep(1)">Back</button>
+                        <button class="btn" onclick="goToStep(3)">Next: Schedule & Send</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Schedule & Send -->
+                <div id="step3-content" class="step-content" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Campaign Name</label>
+                        <input type="text" class="form-input" id="campaignName" placeholder="e.g., August Recovery Drive">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Schedule</label>
+                        <select class="form-select" id="scheduleSelect">
+                            <option value="now">Send Immediately</option>
+                            <option value="scheduled">Schedule for Later</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="scheduleTimeGroup" style="display: none;">
+                        <label class="form-label">Schedule Date & Time</label>
+                        <input type="datetime-local" class="form-input" id="scheduleTime">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Campaign Summary</label>
+                        <div class="template-preview">
+                            <strong>Terminals:</strong> <span id="summary-terminals">0</span> selected<br>
+                            <strong>Message:</strong> <span id="summary-message">No message</span><br>
+                            <strong>Schedule:</strong> <span id="summary-schedule">Immediately</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: space-between; margin-top: 30px;">
+                        <button class="btn btn-secondary" onclick="goToStep(2)">Back</button>
+                        <button class="btn btn-success" onclick="launchCampaign()">
+                            <i class="fas fa-paper-plane"></i>
+                            Launch Campaign
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ALL YOUR REAL TERMINAL DATA
         const demoTerminals = [
@@ -530,6 +834,7 @@
 
         let terminals = demoTerminals;
         let contacts = demoContacts;
+        let selectedTerminals = [];
 
         // Update dashboard
         function updateDashboard() {
@@ -562,6 +867,155 @@
             });
         }
 
+        // Campaign Creator Functions
+        function openCampaignCreator() {
+            document.getElementById('campaignModal').style.display = 'block';
+            populateTerminalsChecklist();
+        }
+
+        function closeCampaignCreator() {
+            document.getElementById('campaignModal').style.display = 'none';
+            resetCampaignCreator();
+        }
+
+        function resetCampaignCreator() {
+            goToStep(1);
+            selectedTerminals = [];
+            document.getElementById('messageContent').value = '';
+            document.getElementById('campaignName').value = '';
+            document.getElementById('templateSelect').value = '';
+            updatePreview();
+        }
+
+        function goToStep(step) {
+            // Hide all steps
+            document.getElementById('step1-content').style.display = 'none';
+            document.getElementById('step2-content').style.display = 'none';
+            document.getElementById('step3-content').style.display = 'none';
+           
+            // Remove active class from all steps
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step3').classList.remove('active');
+           
+            // Show current step and set active
+            document.getElementById(`step${step}-content`).style.display = 'block';
+            document.getElementById(`step${step}`).classList.add('active');
+
+            // Update summary if going to step 3
+            if (step === 3) {
+                updateCampaignSummary();
+            }
+        }
+
+        function populateTerminalsChecklist() {
+            const container = document.getElementById('terminals-checklist');
+            container.innerHTML = '';
+           
+            terminals.forEach((terminal, index) => {
+                const contact = contacts[index] || { name: 'Customer', phone: 'N/A' };
+                const checkbox = document.createElement('div');
+                checkbox.className = 'form-group';
+                checkbox.style.display = 'flex';
+                checkbox.style.alignItems = 'center';
+                checkbox.style.gap = '10px';
+                checkbox.style.padding = '8px';
+                checkbox.style.borderBottom = '1px solid #f1f5f9';
+               
+                checkbox.innerHTML = `
+                    <input type="checkbox" id="terminal-${index}" value="${terminal.terminal_id}" onchange="updateSelectedCount()">
+                    <label for="terminal-${index}" style="flex: 1; cursor: pointer;">
+                        <strong>${terminal.terminal_id}</strong> - ${contact.name} (${contact.phone})
+                    </label>
+                `;
+               
+                container.appendChild(checkbox);
+            });
+        }
+
+        function updateSelectedCount() {
+            const checkboxes = document.querySelectorAll('#terminals-checklist input[type="checkbox"]');
+            selectedTerminals = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+           
+            document.getElementById('selected-count').textContent = selectedTerminals.length;
+        }
+
+        function loadTemplate() {
+            const template = document.getElementById('templateSelect').value;
+            let message = '';
+           
+            switch(template) {
+                case 'recovery_initial':
+                    message = `Hi {customer_name}, this is LOLA. We're offering ₦5,000 for your POS terminal {terminal_id}. Reply 1 to arrange pickup, 2 if still using, 3 if wrong person.`;
+                    break;
+                case 'recovery_reminder':
+                    message = `Hi {customer_name}, quick reminder about the ₦5,000 return offer for terminal {terminal_id}. Reply 1 for pickup, 2 still using, 3 wrong person, 9 to stop messages.`;
+                    break;
+                case 'custom':
+                    message = '';
+                    break;
+            }
+           
+            document.getElementById('messageContent').value = message;
+            updatePreview();
+        }
+
+        function insertVariable(variable) {
+            const textarea = document.getElementById('messageContent');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const newText = text.substring(0, start) + variable + text.substring(end);
+           
+            textarea.value = newText;
+            textarea.focus();
+            textarea.setSelectionRange(start + variable.length, start + variable.length);
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const message = document.getElementById('messageContent').value;
+            document.getElementById('messagePreview').textContent = message || 'Your message will appear here...';
+        }
+
+        function updateCampaignSummary() {
+            document.getElementById('summary-terminals').textContent = selectedTerminals.length;
+            document.getElementById('summary-message').textContent =
+                document.getElementById('messageContent').value.substring(0, 50) + '...';
+           
+            const schedule = document.getElementById('scheduleSelect').value;
+            document.getElementById('summary-schedule').textContent =
+                schedule === 'now' ? 'Immediately' : 'Scheduled';
+        }
+
+        function launchCampaign() {
+            const campaignName = document.getElementById('campaignName').value || 'Unnamed Campaign';
+            const message = document.getElementById('messageContent').value;
+            const schedule = document.getElementById('scheduleSelect').value;
+           
+            if (selectedTerminals.length === 0) {
+                alert('Please select at least one terminal');
+                return;
+            }
+           
+            if (!message.trim()) {
+                alert('Please compose a message');
+                return;
+            }
+           
+            alert(`🎉 Campaign "${campaignName}" Launched!\n\n• ${selectedTerminals.length} terminals selected\n• Message: ${message.substring(0, 50)}...\n• Schedule: ${schedule === 'now' ? 'Immediate' : 'Scheduled'}`);
+           
+            closeCampaignCreator();
+        }
+
+        // Schedule toggle
+        document.getElementById('scheduleSelect').addEventListener('change', function() {
+            const scheduleGroup = document.getElementById('scheduleTimeGroup');
+            scheduleGroup.style.display = this.value === 'scheduled' ? 'block' : 'none';
+        });
+
         // Action functions
         function refreshData() {
             alert('Refreshing data...');
@@ -570,10 +1024,6 @@
 
         function exportData() {
             alert('Exporting data as CSV...');
-        }
-
-        function createCampaign() {
-            alert('Opening campaign creation...');
         }
 
         function viewCampaigns() {
@@ -588,7 +1038,6 @@
         document.getElementById('csvFile').addEventListener('change', function(e) {
             if (e.target.files.length > 0) {
                 alert('CSV file selected: ' + e.target.files[0].name);
-                // Clear file input
                 e.target.value = '';
             }
         });
@@ -596,6 +1045,14 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             updateDashboard();
+           
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('campaignModal');
+                if (event.target === modal) {
+                    closeCampaignCreator();
+                }
+            });
         });
     </script>
 </body>
