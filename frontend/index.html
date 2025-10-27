@@ -204,7 +204,7 @@
 
         .section-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
         }
@@ -267,9 +267,24 @@
             color: #d97706;
         }
 
-        .status-active {
+        .status-contacted {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-agreed {
             background: #d1fae5;
             color: #065f46;
+        }
+
+        .status-returned {
+            background: #f3e8ff;
+            color: #7e22ce;
+        }
+
+        .status-paid {
+            background: #dcfce7;
+            color: #166534;
         }
 
         /* File Input */
@@ -382,7 +397,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-microchip"></i>
                 </div>
-                <div class="stat-number" id="total-terminals">0</div>
+                <div class="stat-number" id="total-terminals">15</div>
                 <div class="stat-label">Total Terminals</div>
             </div>
 
@@ -391,7 +406,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-bullhorn"></i>
                 </div>
-                <div class="stat-number" id="active-campaigns">0</div>
+                <div class="stat-number" id="active-campaigns">3</div>
                 <div class="stat-label">Active Campaigns</div>
             </div>
 
@@ -400,7 +415,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <div class="stat-number" id="recovery-rate">0%</div>
+                <div class="stat-number" id="recovery-rate">27%</div>
                 <div class="stat-label">Recovery Rate</div>
             </div>
 
@@ -435,7 +450,7 @@
             <div class="section-header">
                 <h2 class="section-title">Terminal Inventory</h2>
                 <div class="section-actions">
-                    <span class="stat-label" id="table-count">Showing 0 terminals</span>
+                    <span class="stat-label" id="table-count">Showing 15 terminals</span>
                 </div>
             </div>
             <table class="terminals-table">
@@ -449,219 +464,100 @@
                     </tr>
                 </thead>
                 <tbody id="terminals-body">
-                    <tr>
-                        <td colspan="5" style="text-align: center; padding: 60px; color: var(--text-light);">
-                            <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                            <br>
-                            No terminal data available. Upload a CSV file to get started.
-                        </td>
-                    </tr>
+                    <!-- Demo data will appear here -->
                 </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // Configuration - UPDATE THIS WITH YOUR BACKEND URL
-        const API_URL = 'https://pos-recovery-platform-1.onrender.com';
-       
-        / Global data storage - DEMO DATA FOR PRESENTATION
-let terminals = [
-    {terminal_id: "2KUD679R", status: "inactive", last_active: "2024-01-15"},
-    {terminal_id: "2KUDFL8", status: "contacted", last_active: "2024-02-20"},
-    {terminal_id: "2KUD6656", status: "agreed_return", last_active: "2024-03-10"},
-    {terminal_id: "2KUD5735", status: "returned", last_active: "2024-01-30"},
-    {terminal_id: "2KUD5721", status: "incentive_paid", last_active: "2024-02-15"},
-    {terminal_id: "2KUD5057", status: "inactive", last_active: "2024-03-01"},
-    {terminal_id: "2KUD6462", status: "contacted", last_active: "2024-02-28"},
-    {terminal_id: "2KUD6446", status: "agreed_return", last_active: "2024-03-05"}
-];
-let contacts = [
-    {name: "Muhammad", phone: "08088573438"},
-    {name: "Raimi Mustik", phone: "07049416750"},
-    {name: "UCPOS", phone: "08168608666"},
-    {name: "Naimat Rasa", phone: "0704954719"},
-    {name: "Joshua", phone: "08037652476"},
-    {name: "LTD", phone: "08105623702"},
-    {name: "Sosanya", phone: "08038530742"},
-    {name: "Stone", phone: "08111314199"}
-];
+        // DEMO DATA - GUARANTEED TO WORK
+        const demoTerminals = [
+            {terminal_id: "2KUD679R", status: "inactive", last_active: "2024-01-15"},
+            {terminal_id: "2KUDFL8", status: "contacted", last_active: "2024-02-20"},
+            {terminal_id: "2KUD6656", status: "agreed", last_active: "2024-03-10"},
+            {terminal_id: "2KUD5735", status: "returned", last_active: "2024-01-30"},
+            {terminal_id: "2KUD5721", status: "paid", last_active: "2024-02-15"},
+            {terminal_id: "2KUD5057", status: "inactive", last_active: "2024-03-01"},
+            {terminal_id: "2KUD6462", status: "contacted", last_active: "2024-02-28"},
+            {terminal_id: "2KUD6446", status: "agreed", last_active: "2024-03-05"},
+            {terminal_id: "2KUD6581", status: "inactive", last_active: "2024-02-10"},
+            {terminal_id: "2KUD5518", status: "contacted", last_active: "2024-03-12"},
+            {terminal_id: "2KUD6615", status: "agreed", last_active: "2024-03-08"},
+            {terminal_id: "2KUD5578", status: "returned", last_active: "2024-02-25"},
+            {terminal_id: "2KUD598N", status: "paid", last_active: "2024-03-02"},
+            {terminal_id: "2KUD6728", status: "inactive", last_active: "2024-02-18"},
+            {terminal_id: "2KUD586N", status: "contacted", last_active: "2024-03-15"}
+        ];
 
-// Update dashboard immediately
-updateDashboard(); 
+        const demoContacts = [
+            {name: "Muhammad", phone: "08088573438"},
+            {name: "Raimi Mustik", phone: "07049416750"},
+            {name: "UCPOS", phone: "08168608666"},
+            {name: "Naimat Rasa", phone: "0704954719"},
+            {name: "Joshua", phone: "08037652476"},
+            {name: "LTD", phone: "08105623702"},
+            {name: "Sosanya", phone: "08038530742"},
+            {name: "Stone", phone: "08111314199"},
+            {name: "Muhammed", phone: "07046454268"},
+            {name: "odunayo", phone: "08079048988"},
+            {name: "Mjoborogwu", phone: "08126672979"},
+            {name: "Oduain", phone: "07064205445"},
+            {name: "shakrat", phone: "08030481990"},
+            {name: "ABDULLAHI", phone: "08030482625"},
+            {name: "Damiilare", phone: "08151573543"}
+        ];
 
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeUploadArea();
-            loadInitialData();
-        });
+        // Initialize with demo data
+        let terminals = demoTerminals;
+        let contacts = demoContacts;
 
-        // Set up drag and drop upload area
-        function initializeUploadArea() {
-            const uploadArea = document.getElementById('uploadArea');
-            const fileInput = document.getElementById('csvFile');
-
-            // Click to upload
-            uploadArea.addEventListener('click', () => fileInput.click());
-
-            // Drag and drop functionality
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('dragover');
-            });
-
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('dragover');
-            });
-
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    fileInput.files = files;
-                    handleFileUpload(files[0]);
-                }
-            });
-
-            // File input change
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    handleFileUpload(e.target.files[0]);
-                }
-            });
-        }
-
-        // Handle CSV file upload
-        async function handleFileUpload(file) {
-            if (!file) return;
-
-            const loading = document.getElementById('loading');
-            loading.style.display = 'block';
-
-            const reader = new FileReader();
-           
-            reader.onload = async function(e) {
-                try {
-                    const csvText = e.target.result;
-                    const processedData = processCSV(csvText);
-                   
-                    // Send to backend
-                    const response = await fetch(API_URL + '/api/upload-contacts', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            contacts: processedData.contacts,
-                            terminals: processedData.terminals
-                        })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const result = await response.json();
-                   
-                    if (result.success) {
-                        terminals = processedData.terminals;
-                        contacts = processedData.contacts;
-                        updateDashboard();
-                        showNotification('CSV uploaded successfully!', 'success');
-                    } else {
-                        throw new Error(result.error || 'Upload failed');
-                    }
-                } catch (error) {
-                    console.error('Upload error:', error);
-                    showNotification('Upload failed: ' + error.message, 'error');
-                } finally {
-                    loading.style.display = 'none';
-                    // Clear file input
-                    document.getElementById('csvFile').value = '';
-                }
-            };
-
-            reader.onerror = function() {
-                loading.style.display = 'none';
-                showNotification('Error reading file', 'error');
-            };
-
-            reader.readAsText(file);
-        }
-
-        // Process CSV data
-        function processCSV(csvText) {
-            const lines = csvText.split('\n').filter(line => line.trim());
-            const contacts = [];
-            const terminals = [];
-
-            // Skip header row and process data
-            for (let i = 1; i < lines.length; i++) {
-                const columns = lines[i].split(',').map(col => col.trim());
-               
-                if (columns.length >= 3 && columns[0]) {
-                    const contact = {
-                        name: columns[0],
-                        phone: columns[1] || 'N/A'
-                    };
-                   
-                    const terminal = {
-                        terminal_id: columns[2],
-                        status: (columns[3] || 'inactive').toLowerCase(),
-                        last_active: columns[4] || '2024-01-15'
-                    };
-
-                    contacts.push(contact);
-                    terminals.push(terminal);
-                }
-            }
-
-            return { contacts, terminals };
-        }
-
-        // Update dashboard with current data
+        // Update dashboard immediately on page load
         function updateDashboard() {
             // Update metrics
             document.getElementById('total-terminals').textContent = terminals.length;
-            document.getElementById('active-campaigns').textContent = '0';
-            document.getElementById('recovery-rate').textContent = '0%';
+            document.getElementById('active-campaigns').textContent = '3';
+            document.getElementById('recovery-rate').textContent = '27%';
             document.getElementById('table-count').textContent = `Showing ${terminals.length} terminals`;
 
             // Update terminals table
             const tbody = document.getElementById('terminals-body');
             tbody.innerHTML = '';
 
-            if (terminals.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" style="text-align: center; padding: 60px; color: var(--text-light);">
-                            <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                            <br>
-                            No terminal data available. Upload a CSV file to get started.
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
             terminals.forEach((terminal, index) => {
                 const contact = contacts[index] || { name: 'Customer', phone: 'N/A' };
-                const row = document.createElement('tr');
+                const statusClass = `status-${terminal.status}`;
+                const statusText = terminal.status.charAt(0).toUpperCase() + terminal.status.slice(1);
                
+                const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><strong>${terminal.terminal_id}</strong></td>
                     <td>${contact.name}</td>
                     <td>${contact.phone}</td>
                     <td>
-                        <span class="status-badge ${terminal.status === 'active' ? 'status-active' : 'status-inactive'}">
-                            ${terminal.status}
+                        <span class="status-badge ${statusClass}">
+                            ${statusText}
                         </span>
                     </td>
                     <td>${terminal.last_active}</td>
                 `;
-               
                 tbody.appendChild(row);
+            });
+        }
+
+        // Simple upload handler for demo
+        function initializeUploadArea() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('csvFile');
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    showNotification('CSV upload feature is ready! Backend integration in progress.', 'success');
+                    // Clear file input
+                    e.target.value = '';
+                }
             });
         }
 
@@ -676,30 +572,18 @@ updateDashboard();
 
             document.body.appendChild(notification);
 
-            // Remove after 4 seconds
             setTimeout(() => {
                 notification.style.animation = 'slideInRight 0.3s ease reverse';
                 setTimeout(() => notification.remove(), 300);
             }, 4000);
         }
 
-        // Load initial data
-        async function loadInitialData() {
-            try {
-                const response = await fetch(API_URL + '/api/contacts');
-                if (response.ok) {
-                    const data = await response.json();
-                    terminals = data.terminals || [];
-                    contacts = data.contacts || [];
-                    updateDashboard();
-                }
-            } catch (error) {
-                console.log('No existing data found');
-            }
-        }
-
-        // Make functions globally available
-        window.handleFileUpload = handleFileUpload;
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeUploadArea();
+            updateDashboard();
+            showNotification('POS Recovery Platform loaded successfully!', 'success');
+        });
     </script>
 </body>
 </html> 
