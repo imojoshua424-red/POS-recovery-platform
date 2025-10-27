@@ -4,12 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS Recovery Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f8fafc;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -19,121 +33,186 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
+        /* Header */
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
+            color: white;
         }
 
         .header h1 {
-            color: white;
-            font-size: 2.5rem;
+            font-size: 3rem;
+            font-weight: 800;
             margin-bottom: 10px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .header p {
-            color: rgba(255,255,255,0.8);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
         }
 
+        /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 25px;
             margin-bottom: 40px;
         }
 
+        /* Cards */
         .card {
-            background: white;
-            border-radius: 20px;
+            background: var(--card-bg);
+            border-radius: 24px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
         .stat-card {
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 1.8rem;
         }
 
         .stat-number {
-            font-size: 3rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin: 15px 0;
+            margin: 10px 0;
+            line-height: 1;
         }
 
         .stat-label {
-            color: #666;
+            color: var(--text-light);
             font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* Upload Section */
+        .upload-card {
+            grid-column: span 3;
+            text-align: center;
         }
 
         .upload-area {
-            border: 3px dashed #667eea;
-            border-radius: 15px;
-            padding: 40px 20px;
-            text-align: center;
-            cursor: pointer;
+            border: 3px dashed #e2e8f0;
+            border-radius: 20px;
+            padding: 60px 40px;
             transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
         .upload-area:hover {
-            background: rgba(102, 126, 234, 0.1);
-            border-color: #764ba2;
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.02);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+            transform: scale(1.02);
         }
 
         .upload-icon {
-            font-size: 3rem;
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-
-        .upload-text {
-            color: #666;
+            font-size: 4rem;
+            color: var(--primary);
             margin-bottom: 20px;
         }
 
+        .upload-text h3 {
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .upload-text p {
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+
+        /* Buttons */
         .btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 16px 32px;
             border-radius: 50px;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
         }
 
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Terminals Section */
         .terminals-section {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 30px;
         }
 
         .section-title {
-            color: #333;
-            margin-bottom: 25px;
-            font-size: 1.5rem;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text);
         }
 
         .terminals-table {
@@ -142,48 +221,131 @@
         }
 
         .terminals-table th {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            padding: 15px;
+            padding: 18px;
             text-align: left;
             font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .terminals-table th:first-child {
+            border-radius: 12px 0 0 0;
+        }
+
+        .terminals-table th:last-child {
+            border-radius: 0 12px 0 0;
         }
 
         .terminals-table td {
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 18px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text);
         }
 
         .terminals-table tr:hover {
-            background: #f8f9ff;
+            background: #f8fafc;
+        }
+
+        .terminals-table tr:last-child td {
+            border-bottom: none;
         }
 
         .status-badge {
-            padding: 5px 15px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-size: 0.8rem;
-            font-weight: bold;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .status-inactive {
-            background: #ffeaa7;
-            color: #e17055;
+            background: #fef3c7;
+            color: #d97706;
         }
 
         .status-active {
-            background: #55efc4;
-            color: #00b894;
+            background: #d1fae5;
+            color: #065f46;
         }
 
+        /* File Input */
         .file-input {
             display: none;
         }
 
+        /* Loading */
         .loading {
             display: none;
             text-align: center;
-            color: #667eea;
+            color: var(--primary);
             font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 20px 25px;
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, var(--error), #dc2626);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+           
+            .upload-card {
+                grid-column: span 2;
+            }
         }
 
         @media (max-width: 768px) {
@@ -191,58 +353,91 @@
                 grid-template-columns: 1fr;
             }
            
+            .upload-card {
+                grid-column: span 1;
+            }
+           
             .header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
            
             .stat-number {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
             <h1>POS Recovery Platform</h1>
-            <p>Manage and recover inactive POS terminals efficiently</p>
+            <p>Streamline your terminal recovery process with intelligent automation</p>
         </div>
 
+        <!-- Dashboard Metrics -->
         <div class="dashboard-grid">
+            <!-- Total Terminals Card -->
             <div class="card stat-card">
-                <div class="stat-label">Total Terminals</div>
+                <div class="stat-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
                 <div class="stat-number" id="total-terminals">0</div>
-                <div class="stat-label">In System</div>
+                <div class="stat-label">Total Terminals</div>
             </div>
 
+            <!-- Active Campaigns Card -->
             <div class="card stat-card">
-                <div class="stat-label">Active Campaigns</div>
+                <div class="stat-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
                 <div class="stat-number" id="active-campaigns">0</div>
-                <div class="stat-label">Running</div>
+                <div class="stat-label">Active Campaigns</div>
             </div>
 
+            <!-- Recovery Rate Card -->
             <div class="card stat-card">
-                <div class="stat-label">Recovery Rate</div>
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
                 <div class="stat-number" id="recovery-rate">0%</div>
-                <div class="stat-label">Success Rate</div>
+                <div class="stat-label">Recovery Rate</div>
             </div>
 
-            <div class="card">
-                <div class="upload-area" onclick="document.getElementById('csvFile').click()">
-                    <div class="upload-icon"></div>
+            <!-- Upload Card -->
+            <div class="card upload-card">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
                     <div class="upload-text">
                         <h3>Upload Terminal Data</h3>
-                        <p>Click here or drag & drop your CSV file</p>
+                        <p>Drag & drop your CSV file or click to browse</p>
+                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 10px;">
+                            Supported format: customer_name, phone, terminal_id, status
+                        </p>
                     </div>
+                    <button class="btn" onclick="document.getElementById('csvFile').click()">
+                        <i class="fas fa-file-csv"></i>
+                        Choose CSV File
+                    </button>
                     <input type="file" id="csvFile" class="file-input" accept=".csv">
-                    <button class="btn" onclick="document.getElementById('csvFile').click()">Choose File</button>
                 </div>
-                <div class="loading" id="loading">Uploading...</div>
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    Processing your CSV file...
+                </div>
             </div>
         </div>
 
+        <!-- Terminals Section -->
         <div class="terminals-section">
-            <h2 class="section-title">Terminal Inventory</h2>
+            <div class="section-header">
+                <h2 class="section-title">Terminal Inventory</h2>
+                <div class="section-actions">
+                    <span class="stat-label" id="table-count">Showing 0 terminals</span>
+                </div>
+            </div>
             <table class="terminals-table">
                 <thead>
                     <tr>
@@ -255,8 +450,10 @@
                 </thead>
                 <tbody id="terminals-body">
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 40px; color: #666;">
-                            No terminals uploaded yet. Upload a CSV file to get started.
+                        <td colspan="5" style="text-align: center; padding: 60px; color: var(--text-light);">
+                            <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <br>
+                            No terminal data available. Upload a CSV file to get started.
                         </td>
                     </tr>
                 </tbody>
@@ -265,138 +462,223 @@
     </div>
 
     <script>
+        // Configuration - UPDATE THIS WITH YOUR BACKEND URL
         const API_URL = 'https://pos-recovery-platform-1.onrender.com';
+       
+        // Global data storage
         let terminals = [];
+        let contacts = [];
 
-        document.getElementById('csvFile').addEventListener('change', uploadCSV);
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeUploadArea();
+            loadInitialData();
+        });
 
-        async function uploadCSV(event) {
-            const file = event.target.files[0];
+        // Set up drag and drop upload area
+        function initializeUploadArea() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('csvFile');
+
+            // Click to upload
+            uploadArea.addEventListener('click', () => fileInput.click());
+
+            // Drag and drop functionality
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    handleFileUpload(files[0]);
+                }
+            });
+
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            });
+        }
+
+        // Handle CSV file upload
+        async function handleFileUpload(file) {
             if (!file) return;
 
             const loading = document.getElementById('loading');
             loading.style.display = 'block';
 
             const reader = new FileReader();
+           
             reader.onload = async function(e) {
                 try {
                     const csvText = e.target.result;
-                    const lines = csvText.split('\n');
-                    const contacts = [];
-                    const terminalsData = [];
+                    const processedData = processCSV(csvText);
                    
-                    // Process CSV
-                    for (let i = 1; i < lines.length; i++) {
-                        const columns = lines[i].split(',');
-                        if (columns.length >= 3 && columns[0].trim()) {
-                            contacts.push({
-                                name: columns[0].trim(),
-                                phone: columns[1].trim()
-                            });
-                            terminalsData.push({
-                                terminal_id: columns[2].trim(),
-                                status: 'inactive',
-                                last_active: '2024-01-15'
-                            });
-                        }
-                    }
-
                     // Send to backend
                     const response = await fetch(API_URL + '/api/upload-contacts', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contacts, terminals: terminalsData })
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            contacts: processedData.contacts,
+                            terminals: processedData.terminals
+                        })
                     });
-                   
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
                     const result = await response.json();
                    
                     if (result.success) {
-                        terminals = terminalsData;
+                        terminals = processedData.terminals;
+                        contacts = processedData.contacts;
                         updateDashboard();
                         showNotification('CSV uploaded successfully!', 'success');
                     } else {
-                        showNotification('Upload failed: ' + result.error, 'error');
+                        throw new Error(result.error || 'Upload failed');
                     }
                 } catch (error) {
-                    showNotification('Upload error: ' + error.message, 'error');
+                    console.error('Upload error:', error);
+                    showNotification('Upload failed: ' + error.message, 'error');
                 } finally {
                     loading.style.display = 'none';
+                    // Clear file input
+                    document.getElementById('csvFile').value = '';
                 }
             };
+
+            reader.onerror = function() {
+                loading.style.display = 'none';
+                showNotification('Error reading file', 'error');
+            };
+
             reader.readAsText(file);
         }
 
+        // Process CSV data
+        function processCSV(csvText) {
+            const lines = csvText.split('\n').filter(line => line.trim());
+            const contacts = [];
+            const terminals = [];
+
+            // Skip header row and process data
+            for (let i = 1; i < lines.length; i++) {
+                const columns = lines[i].split(',').map(col => col.trim());
+               
+                if (columns.length >= 3 && columns[0]) {
+                    const contact = {
+                        name: columns[0],
+                        phone: columns[1] || 'N/A'
+                    };
+                   
+                    const terminal = {
+                        terminal_id: columns[2],
+                        status: (columns[3] || 'inactive').toLowerCase(),
+                        last_active: columns[4] || '2024-01-15'
+                    };
+
+                    contacts.push(contact);
+                    terminals.push(terminal);
+                }
+            }
+
+            return { contacts, terminals };
+        }
+
+        // Update dashboard with current data
         function updateDashboard() {
             // Update metrics
             document.getElementById('total-terminals').textContent = terminals.length;
             document.getElementById('active-campaigns').textContent = '0';
             document.getElementById('recovery-rate').textContent = '0%';
+            document.getElementById('table-count').textContent = `Showing ${terminals.length} terminals`;
 
-            // Update table
+            // Update terminals table
             const tbody = document.getElementById('terminals-body');
             tbody.innerHTML = '';
 
             if (terminals.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 40px; color: #666;">
-                            No terminals uploaded yet. Upload a CSV file to get started.
+                        <td colspan="5" style="text-align: center; padding: 60px; color: var(--text-light);">
+                            <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <br>
+                            No terminal data available. Upload a CSV file to get started.
                         </td>
                     </tr>
                 `;
                 return;
             }
 
-            terminals.forEach(terminal => {
+            terminals.forEach((terminal, index) => {
+                const contact = contacts[index] || { name: 'Customer', phone: 'N/A' };
                 const row = document.createElement('tr');
+               
                 row.innerHTML = `
-                    <td>${terminal.terminal_id}</td>
-                    <td>Customer ${terminal.terminal_id}</td>
-                    <td>+234 XXX XXX XXXX</td>
-                    <td><span class="status-badge status-inactive">Inactive</span></td>
+                    <td><strong>${terminal.terminal_id}</strong></td>
+                    <td>${contact.name}</td>
+                    <td>${contact.phone}</td>
+                    <td>
+                        <span class="status-badge ${terminal.status === 'active' ? 'status-active' : 'status-inactive'}">
+                            ${terminal.status}
+                        </span>
+                    </td>
                     <td>${terminal.last_active}</td>
                 `;
+               
                 tbody.appendChild(row);
             });
         }
 
+        // Show notification
         function showNotification(message, type) {
-            // Create notification element
             const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 25px;
-                border-radius: 10px;
-                color: white;
-                font-weight: bold;
-                z-index: 1000;
-                animation: slideIn 0.3s ease;
-                background: ${type === 'success' ? '#00b894' : '#e17055'};
-                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                ${message}
             `;
-            notification.textContent = message;
+
             document.body.appendChild(notification);
 
-            // Remove after 3 seconds
+            // Remove after 4 seconds
             setTimeout(() => {
-                notification.remove();
-            }, 3000);
+                notification.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
         }
 
-        // Add CSS animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
+        // Load initial data
+        async function loadInitialData() {
+            try {
+                const response = await fetch(API_URL + '/api/contacts');
+                if (response.ok) {
+                    const data = await response.json();
+                    terminals = data.terminals || [];
+                    contacts = data.contacts || [];
+                    updateDashboard();
+                }
+            } catch (error) {
+                console.log('No existing data found');
             }
-        `;
-        document.head.appendChild(style);
+        }
 
-        // Initial load
-        updateDashboard();
+        // Make functions globally available
+        window.handleFileUpload = handleFileUpload;
     </script>
 </body>
 </html> 
