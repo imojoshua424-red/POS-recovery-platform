@@ -60,7 +60,7 @@
         /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 25px;
             margin-bottom: 40px;
         }
@@ -118,6 +118,103 @@
             color: var(--text-light);
             font-size: 1.1rem;
             font-weight: 500;
+        }
+
+        /* Action Buttons */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--text-light);
+            box-shadow: 0 4px 15px rgba(100, 116, 139, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Upload Section */
+        .upload-area {
+            border: 3px dashed #e2e8f0;
+            border-radius: 20px;
+            padding: 40px 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .upload-text h3 {
+            font-size: 1.3rem;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .upload-text p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        /* Actions Section */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .action-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         /* Terminals Section */
@@ -215,8 +312,27 @@
             color: #166534;
         }
 
+        /* File Input */
+        .file-input {
+            display: none;
+        }
+
         /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+           
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+           
             .header h1 {
                 font-size: 2.2rem;
             }
@@ -229,6 +345,15 @@
                 display: block;
                 overflow-x: auto;
             }
+           
+            .action-buttons {
+                flex-direction: column;
+            }
+           
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -237,17 +362,100 @@
         <!-- Header -->
         <div class="header">
             <h1>POS Recovery Platform</h1>
-            <p>Terminal Inventory Management System</p>
+            <p>Complete Terminal Recovery Management System</p>
         </div>
 
-        <!-- Simple Metric -->
+        <!-- Dashboard Metrics -->
         <div class="dashboard-grid">
+            <!-- Total Terminals Card -->
             <div class="card stat-card">
                 <div class="stat-icon">
                     <i class="fas fa-microchip"></i>
                 </div>
                 <div class="stat-number" id="total-terminals">0</div>
-                <div class="stat-label">Terminals in System</div>
+                <div class="stat-label">Total Terminals</div>
+            </div>
+
+            <!-- Campaigns Card -->
+            <div class="card stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <div class="stat-number" id="active-campaigns">0</div>
+                <div class="stat-label">Active Campaigns</div>
+            </div>
+
+            <!-- Recovery Rate Card -->
+            <div class="card stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-number" id="recovery-rate">0%</div>
+                <div class="stat-label">Recovery Rate</div>
+            </div>
+        </div>
+
+        <!-- Actions Section -->
+        <div class="actions-grid">
+            <!-- Data Management -->
+            <div class="action-card">
+                <div class="action-title">
+                    <i class="fas fa-database"></i>
+                    Data Management
+                </div>
+                <div class="action-buttons">
+                    <button class="btn" onclick="document.getElementById('csvFile').click()">
+                        <i class="fas fa-upload"></i>
+                        Upload CSV
+                    </button>
+                    <button class="btn btn-secondary" onclick="refreshData()">
+                        <i class="fas fa-sync"></i>
+                        Refresh Data
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportData()">
+                        <i class="fas fa-download"></i>
+                        Export CSV
+                    </button>
+                </div>
+                <input type="file" id="csvFile" class="file-input" accept=".csv">
+            </div>
+
+            <!-- Campaign Actions -->
+            <div class="action-card">
+                <div class="action-title">
+                    <i class="fas fa-rocket"></i>
+                    Campaign Actions
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="createCampaign()">
+                        <i class="fas fa-plus"></i>
+                        Create Campaign
+                    </button>
+                    <button class="btn" onclick="viewCampaigns()">
+                        <i class="fas fa-eye"></i>
+                        View Campaigns
+                    </button>
+                    <button class="btn" onclick="openInbox()">
+                        <i class="fas fa-inbox"></i>
+                        Open Inbox
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Area -->
+        <div class="card">
+            <div class="upload-area" onclick="document.getElementById('csvFile').click()">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text">
+                    <h3>Upload Terminal Data</h3>
+                    <p>Drag & drop your CSV file or click to browse</p>
+                    <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 10px;">
+                        Supported format: customer_name, phone, terminal_id, status
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -283,7 +491,7 @@
     </div>
 
     <script>
-        // ALL YOUR REAL TERMINAL DATA FROM SCREENSHOTS
+        // ALL YOUR REAL TERMINAL DATA
         const demoTerminals = [
             {terminal_id: "2KUD679R", status: "inactive", last_active: "2024-01-15"},
             {terminal_id: "2KUDFL8", status: "inactive", last_active: "2024-02-20"},
@@ -299,49 +507,7 @@
             {terminal_id: "2KUD5578", status: "inactive", last_active: "2024-02-25"},
             {terminal_id: "2KUD598N", status: "inactive", last_active: "2024-03-02"},
             {terminal_id: "2KUD6728", status: "inactive", last_active: "2024-02-18"},
-            {terminal_id: "2KUD586N", status: "inactive", last_active: "2024-03-15"},
-            {terminal_id: "2KUD668K", status: "inactive", last_active: "2024-02-22"},
-            {terminal_id: "2KUD516V", status: "inactive", last_active: "2024-03-07"},
-            {terminal_id: "2KUD5810", status: "inactive", last_active: "2024-02-14"},
-            {terminal_id: "2KUD641C", status: "inactive", last_active: "2024-03-11"},
-            {terminal_id: "2KUD542B", status: "inactive", last_active: "2024-02-19"},
-            {terminal_id: "2KUD597M", status: "inactive", last_active: "2024-03-03"},
-            {terminal_id: "2KUD537M", status: "inactive", last_active: "2024-02-26"},
-            {terminal_id: "2KUD5103", status: "inactive", last_active: "2024-03-09"},
-            {terminal_id: "2KUD640H", status: "inactive", last_active: "2024-02-23"},
-            {terminal_id: "2KUD517S", status: "inactive", last_active: "2024-03-13"},
-            {terminal_id: "2KUD517SC", status: "inactive", last_active: "2024-02-17"},
-            {terminal_id: "2KUD552G", status: "inactive", last_active: "2024-03-06"},
-            {terminal_id: "2KUD518F", status: "inactive", last_active: "2024-02-21"},
-            {terminal_id: "2KUD519S", status: "inactive", last_active: "2024-03-04"},
-            {terminal_id: "2KUD5763", status: "inactive", last_active: "2024-02-16"},
-            {terminal_id: "2KUD588X", status: "inactive", last_active: "2024-03-14"},
-            {terminal_id: "2KUD5928", status: "inactive", last_active: "2024-02-24"},
-            {terminal_id: "2KUD5610", status: "inactive", last_active: "2024-03-16"},
-            {terminal_id: "2KUD5080", status: "inactive", last_active: "2024-02-27"},
-            {terminal_id: "2KUD558G", status: "inactive", last_active: "2024-03-17"},
-            {terminal_id: "2KUD661b", status: "inactive", last_active: "2024-02-29"},
-            {terminal_id: "2KUD571H", status: "inactive", last_active: "2024-03-18"},
-            {terminal_id: "2KUD515S", status: "inactive", last_active: "2024-03-19"},
-            {terminal_id: "2KUD577N", status: "inactive", last_active: "2024-03-20"},
-            {terminal_id: "2KUD5181", status: "inactive", last_active: "2024-03-21"},
-            {terminal_id: "2KUD5630", status: "inactive", last_active: "2024-03-22"},
-            {terminal_id: "2KUD579S", status: "inactive", last_active: "2024-03-23"},
-            {terminal_id: "2KUD615S", status: "inactive", last_active: "2024-03-24"},
-            {terminal_id: "2KUD614J", status: "inactive", last_active: "2024-03-25"},
-            {terminal_id: "2KUD631X", status: "inactive", last_active: "2024-03-26"},
-            {terminal_id: "2KUD6698", status: "inactive", last_active: "2024-03-27"},
-            {terminal_id: "2KUD619W", status: "inactive", last_active: "2024-03-28"},
-            {terminal_id: "2KUD590S", status: "inactive", last_active: "2024-03-29"},
-            {terminal_id: "2KUD519W", status: "inactive", last_active: "2024-03-30"},
-            {terminal_id: "2KUD518V", status: "inactive", last_active: "2024-03-31"},
-            {terminal_id: "2KUD6490", status: "inactive", last_active: "2024-04-01"},
-            {terminal_id: "2KUD507N", status: "inactive", last_active: "2024-04-02"},
-            {terminal_id: "2KUD680J", status: "inactive", last_active: "2024-04-03"},
-            {terminal_id: "2KUD507N", status: "inactive", last_active: "2024-04-04"},
-            {terminal_id: "2KUD680J", status: "inactive", last_active: "2024-04-05"},
-            {terminal_id: "2KUD507N", status: "inactive", last_active: "2024-04-06"},
-            {terminal_id: "2KUD680J", status: "inactive", last_active: "2024-04-07"}
+            {terminal_id: "2KUD586N", status: "inactive", last_active: "2024-03-15"}
         ];
 
         const demoContacts = [
@@ -359,70 +525,19 @@
             {name: "Oduain", phone: "07064205445"},
             {name: "shakrat", phone: "08030481990"},
             {name: "ABDULLAHI", phone: "08030482625"},
-            {name: "Damiilare", phone: "08151573543"},
-            {name: "Abdel", phone: "08137457707"},
-            {name: "Ruth Blessini", phone: "08168900488"},
-            {name: "Dan masu Gi", phone: "08067095193"},
-            {name: "Regina Olad", phone: "08071455536"},
-            {name: "Onyekachi", phone: "08160070204"},
-            {name: "Yu surf", phone: "08138670379"},
-            {name: "Sulaiman M", phone: "08145717945"},
-            {name: "Saibed", phone: "08136503080"},
-            {name: "Anbuwe", phone: "0806406812"},
-            {name: "ADEMYI", phone: "08062880767"},
-            {name: "Arayo", phone: "08036506402"},
-            {name: "Avoyenni", phone: "07030451257"},
-            {name: "Romoke", phone: "07032246599"},
-            {name: "ghenga", phone: "08050502266"},
-            {name: "Quangu", phone: "08022152260"},
-            {name: "Asmola", phone: "0166205426"},
-            {name: "ARAKAUKI", phone: "07035455240"},
-            {name: "Iwankwo", phone: "08135343256"},
-            {name: "Godwin", phone: "08059851568"},
-            {name: "Onyekaozuu", phone: "07043421368"},
-            {name: "Amiya", phone: "08061467464"},
-            {name: "Gamyst", phone: "08104728690"},
-            {name: "Zahab olafd", phone: "08131261787"},
-            {name: "kafayat", phone: "08064959751"},
-            {name: "Lawrence", phone: "07034849521"},
-            {name: "Jaude", phone: "08103292234"},
-            {name: "Akournayo", phone: "08035598752"},
-            {name: "Ayoto", phone: "09037067760"},
-            {name: "Ventures", phone: "08135933977"},
-            {name: "Joke", phone: "08060168000"},
-            {name: "manah", phone: "08035688228"},
-            {name: "Emmanuel di", phone: "08087058037"},
-            {name: "AUQONI", phone: "07014524886"},
-            {name: "Raj", phone: "08186078683"},
-            {name: "STORE", phone: "09137962765"},
-            {name: "Romoke", phone: "07034462652"},
-            {name: "Temtiope", phone: "09066558956"},
-            {name: "Aloeede", phone: "08135424044"},
-            {name: "Kumatsu", phone: "0806374616"},
-            {name: "MUSBAU", phone: "08108730707"},
-            {name: "Iwankwo", phone: "08075854522"},
-            {name: "Shamsudimi", phone: "09031568955"},
-            {name: "SAKIRAT", phone: "08138131533"},
-            {name: "Syambade", phone: "08111154032"},
-            {name: "Enoro", phone: "09126256962"},
-            {name: "oluvubukola", phone: "08106769884"},
-            {name: "Akerele", phone: "08024553006"},
-            {name: "Sahabi Abdul", phone: "08051310718"},
-            {name: "Owadan", phone: "08151108102"},
-            {name: "Agbo Purity I", phone: "0903949984"}
+            {name: "Damiilare", phone: "08151573543"}
         ];
 
-        // Initialize with demo data
         let terminals = demoTerminals;
         let contacts = demoContacts;
 
-        // Update dashboard immediately on page load
+        // Update dashboard
         function updateDashboard() {
-            // Update metrics
             document.getElementById('total-terminals').textContent = terminals.length;
+            document.getElementById('active-campaigns').textContent = '0';
+            document.getElementById('recovery-rate').textContent = '0%';
             document.getElementById('table-count').textContent = `Showing ${terminals.length} terminals`;
 
-            // Update terminals table
             const tbody = document.getElementById('terminals-body');
             tbody.innerHTML = '';
 
@@ -447,7 +562,38 @@
             });
         }
 
-        // Initialize when page loads
+        // Action functions
+        function refreshData() {
+            alert('Refreshing data...');
+            updateDashboard();
+        }
+
+        function exportData() {
+            alert('Exporting data as CSV...');
+        }
+
+        function createCampaign() {
+            alert('Opening campaign creation...');
+        }
+
+        function viewCampaigns() {
+            alert('Opening campaigns view...');
+        }
+
+        function openInbox() {
+            alert('Opening inbox...');
+        }
+
+        // File upload
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                alert('CSV file selected: ' + e.target.files[0].name);
+                // Clear file input
+                e.target.value = '';
+            }
+        });
+
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             updateDashboard();
         });
