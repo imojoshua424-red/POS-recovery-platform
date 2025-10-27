@@ -3,22 +3,28 @@ const app = express();
 
 app.use(express.json());
 
-let data = { contacts: [], terminals: [] };
+let contacts = [];
+let terminals = [];
 
 app.get('/', (req, res) => {
-  res.json({ status: 'OK' });
+  res.json({ status: 'OK', message: 'Backend running' });
 });
 
 app.post('/api/upload-contacts', (req, res) => {
-  data = req.body;
-  res.json({ success: true, message: 'Uploaded' });
+  console.log('Received upload request:', req.body);
+  contacts = req.body.contacts || [];
+  terminals = req.body.terminals || [];
+  res.json({
+    success: true,
+    message: `Uploaded ${contacts.length} contacts and ${terminals.length} terminals`
+  });
 });
 
 app.get('/api/contacts', (req, res) => {
-  res.json(data);
+  res.json({ contacts, terminals });
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log('Server running on port ' + PORT);
 }); 
