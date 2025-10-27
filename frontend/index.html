@@ -465,21 +465,30 @@
         // Configuration - UPDATE THIS WITH YOUR BACKEND URL
         const API_URL = 'https://pos-recovery-platform-1.onrender.com';
        
-        // Global data storage - TEMPORARY DEMO DATA
+        / Global data storage - DEMO DATA FOR PRESENTATION
 let terminals = [
     {terminal_id: "2KUD679R", status: "inactive", last_active: "2024-01-15"},
-    {terminal_id: "2KUDFL8", status: "inactive", last_active: "2024-02-20"},
-    {terminal_id: "2KUD6656", status: "inactive", last_active: "2024-03-10"},
-    {terminal_id: "2KUD5735", status: "inactive", last_active: "2024-01-30"},
-    {terminal_id: "2KUD5721", status: "inactive", last_active: "2024-02-15"}
+    {terminal_id: "2KUDFL8", status: "contacted", last_active: "2024-02-20"},
+    {terminal_id: "2KUD6656", status: "agreed_return", last_active: "2024-03-10"},
+    {terminal_id: "2KUD5735", status: "returned", last_active: "2024-01-30"},
+    {terminal_id: "2KUD5721", status: "incentive_paid", last_active: "2024-02-15"},
+    {terminal_id: "2KUD5057", status: "inactive", last_active: "2024-03-01"},
+    {terminal_id: "2KUD6462", status: "contacted", last_active: "2024-02-28"},
+    {terminal_id: "2KUD6446", status: "agreed_return", last_active: "2024-03-05"}
 ];
 let contacts = [
     {name: "Muhammad", phone: "08088573438"},
     {name: "Raimi Mustik", phone: "07049416750"},
     {name: "UCPOS", phone: "08168608666"},
     {name: "Naimat Rasa", phone: "0704954719"},
-    {name: "Joshua", phone: "08037652476"}
-]; 
+    {name: "Joshua", phone: "08037652476"},
+    {name: "LTD", phone: "08105623702"},
+    {name: "Sosanya", phone: "08038530742"},
+    {name: "Stone", phone: "08111314199"}
+];
+
+// Update dashboard immediately
+updateDashboard(); 
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
