@@ -1,68 +1,21 @@
-// COMPLETE BACKEND - ALL FRONTEND ROUTES INCLUDED
+// SIMPLE POS BACKEND - NO INSTALLATION NEEDED
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 
-// Simple UUID generator
-function generateId() {
-    return 'xxxx-xxxx-4xxx-yxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0;
-        const v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-}
-
-// Data storage
+// Simple data storage
 let segments = [];
 let campaigns = [];
-let contacts = [
-    {
-        id: '1',
-        customer_name: 'John Doe',
-        phone: '+2348012345678',
-        whatsapp_opt_in: true,
-        sms_opt_in: false,
-        address: '123 Main St, Lagos',
-        city: 'Lagos',
-        state: 'Lagos',
-        terminals: [
-            {
-                id: 't1',
-                serial_number: 'POS12345',
-                status: 'inactive',
-                last_active_date: '2024-01-15'
-            }
-        ]
-    },
-    {
-        id: '2',
-        customer_name: 'Jane Smith',
-        phone: '+2348023456789',
-        whatsapp_opt_in: true,
-        sms_opt_in: true,
-        address: '456 Oak Ave, Abuja',
-        city: 'Abuja',
-        state: 'FCT',
-        terminals: [
-            {
-                id: 't2',
-                serial_number: 'POS67890',
-                status: 'contacted',
-                last_active_date: '2024-02-01'
-            }
-        ]
-    }
-];
+let contacts = [];
 let messages = [];
-let tasks = [];
 
 const server = http.createServer((req, res) => {
-    console.log(`🌐 ${req.method} ${req.url}`);
-   
-    // CORS headers
+    // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
    
-    // Handle preflight
+    // Handle preflight requests
     if (req.method === 'OPTIONS') {
         res.writeHead(200);
         res.end();
@@ -70,39 +23,41 @@ const server = http.createServer((req, res) => {
     }
    
     let body = '';
-    req.on('data', chunk => body += chunk.toString());
+    req.on('data', chunk => {
+        body += chunk.toString();
+    });
    
     req.on('end', () => {
         let jsonData = {};
-        if (body && (req.method === 'POST' || req.method === 'PUT')) {
+        if (body && req.method === 'POST') {
             try {
                 jsonData = JSON.parse(body);
-            } catch (e) {}
+            } catch (e) {
+                // Ignore parse errors
+            }
         }
        
-        // ==================== ALL API ROUTES ====================
-       
-        // 1. TEST ENDPOINT - http://localhost:5000/api/test
+        // API Routes
         if (req.url === '/api/test' && req.method === 'GET') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
-                message: '🚀 Cosmic POS Backend - ALL ROUTES WORKING!',
-                timestamp: new Date().toISOString()
+                message: '🚀 Cosmic POS Backend - NO INSTALLATION!',
+                timestamp: new Date().toISOString(),
+                status: 'working'
             }));
             return;
         }
        
-        // 2. GET SEGMENTS - http://localhost:5000/api/segments
         if (req.url === '/api/segments' && req.method === 'GET') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(segments));
             return;
         }
        
-        // 3. UPLOAD CSV - http://localhost:5000/api/upload-csv
         if (req.url === '/api/upload-csv' && req.method === 'POST') {
+            const segmentId = 'seg-' + Date.now();
             const newSegment = {
-                id: generateId(),
+                id: segmentId,
                 name: jsonData.segmentName || 'New Segment',
                 contact_count: 50,
                 created_at: new Date().toISOString()
@@ -117,33 +72,45 @@ const server = http.createServer((req, res) => {
                     total: 50,
                     successful: 47,
                     errors: 3
-                },
-                errors: [
-                    { row: 12, error: 'Invalid phone number' },
-                    { row: 45, error: 'Missing customer name' }
-                ]
+                }
             }));
             return;
         }
        
-        // 4. GET CONTACTS - http://localhost:5000/api/contacts
         if (req.url === '/api/contacts' && req.method === 'GET') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(contacts));
+            res.end(JSON.stringify([
+                {
+                    id: '1',
+                    customer_name: 'John Doe',
+                    phone: '+2348012345678',
+                    whatsapp_opt_in: true,
+                    terminals: [
+                        { id: 't1', serial_number: 'POS12345', status: 'inactive' }
+                    ]
+                },
+                {
+                    id: '2',
+                    customer_name: 'Jane Smith',
+                    phone: '+2348023456789',
+                    whatsapp_opt_in: true,
+                    terminals: [
+                        { id: 't2', serial_number: 'POS67890', status: 'contacted' }
+                    ]
+                }
+            ]));
             return;
         }
        
-        // 5. GET CAMPAIGNS - http://localhost:5000/api/campaigns
         if (req.url === '/api/campaigns' && req.method === 'GET') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(campaigns));
             return;
         }
        
-        // 6. CREATE CAMPAIGN - http://localhost:5000/api/campaigns
         if (req.url === '/api/campaigns' && req.method === 'POST') {
             const newCampaign = {
-                id: generateId(),
+                id: 'camp-' + Date.now(),
                 name: jsonData.name || 'New Campaign',
                 template_text: jsonData.template || 'Hello {name}, return terminal {serial} for ₦5,000',
                 status: 'draft',
@@ -156,122 +123,56 @@ const server = http.createServer((req, res) => {
             return;
         }
        
-        // 7. SEND CAMPAIGN - http://localhost:5000/api/campaigns/123/send
         if (req.url.startsWith('/api/campaigns/') && req.url.endsWith('/send') && req.method === 'POST') {
-            const parts = req.url.split('/');
-            const campaignId = parts[3];
-           
-            // Update campaign status
-            const campaign = campaigns.find(c => c.id === campaignId);
-            if (campaign) campaign.status = 'running';
-           
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
                 success: true,
                 message: 'Campaign sent successfully!',
-                messagesSent: contacts.length,
-                campaign: campaign
+                messagesSent: 25
             }));
             return;
         }
        
-        // 8. DASHBOARD STATS - http://localhost:5000/api/dashboard/stats
         if (req.url === '/api/dashboard/stats' && req.method === 'GET') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
-                totalContacts: contacts.length,
-                contacted: contacts.filter(c => c.terminals.some(t => t.status !== 'inactive')).length,
-                agreedReturns: contacts.filter(c => c.terminals.some(t => t.status === 'agreed_return')).length,
-                returned: contacts.filter(c => c.terminals.some(t => t.status === 'returned_verified')).length,
+                totalContacts: 156,
+                contacted: 124,
+                agreedReturns: 67,
+                returned: 45,
                 recoveryRate: '28.8'
             }));
             return;
         }
        
-        // 9. GET MESSAGES - http://localhost:5000/api/messages
         if (req.url === '/api/messages' && req.method === 'GET') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(messages));
+            res.end(JSON.stringify([
+                {
+                    id: '1',
+                    contact_name: 'John Doe',
+                    content: 'Hello, please return your terminal POS12345 for ₦5,000',
+                    status: 'sent',
+                    sent_at: new Date().toISOString(),
+                    direction: 'outbound'
+                }
+            ]));
             return;
         }
        
-        // 10. UPDATE TERMINAL STATUS - http://localhost:5000/api/terminals/123/status
-        if (req.url.startsWith('/api/terminals/') && req.url.endsWith('/status') && req.method === 'PUT') {
-            const parts = req.url.split('/');
-            const terminalId = parts[3];
-           
-            // Find and update terminal
-            let updated = false;
-            contacts.forEach(contact => {
-                contact.terminals.forEach(terminal => {
-                    if (terminal.id === terminalId) {
-                        terminal.status = jsonData.status || 'contacted';
-                        updated = true;
-                    }
-                });
-            });
-           
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({
-                success: true,
-                message: `Terminal status updated to ${jsonData.status}`,
-                terminalId: terminalId,
-                status: jsonData.status
-            }));
-            return;
-        }
-       
-        // 11. QUICK REPLY - http://localhost:5000/api/quick-reply
         if (req.url === '/api/quick-reply' && req.method === 'POST') {
-            const newMessage = {
-                id: generateId(),
-                contact_id: jsonData.contact_id,
-                contact_name: 'Agent',
-                content: 'Quick reply sent to customer',
-                status: 'sent',
-                sent_at: new Date().toISOString(),
-                direction: 'outbound'
-            };
-            messages.push(newMessage);
-           
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
                 success: true,
-                message: newMessage
+                message: 'Quick reply sent successfully!'
             }));
             return;
         }
        
-        // 12. GET TASKS - http://localhost:5000/api/tasks
-        if (req.url === '/api/tasks' && req.method === 'GET') {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(tasks));
-            return;
-        }
-       
-        // 13. CREATE TASK - http://localhost:5000/api/tasks
-        if (req.url === '/api/tasks' && req.method === 'POST') {
-            const newTask = {
-                id: generateId(),
-                terminal_id: jsonData.terminal_id,
-                type: jsonData.type || 'pickup',
-                status: 'queued',
-                created_at: new Date().toISOString()
-            };
-            tasks.push(newTask);
-           
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({
-                success: true,
-                task: newTask
-            }));
-            return;
-        }
-       
-        // ==================== ROUTE NOT FOUND ====================
+        // 404 for unknown routes
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
-            error: `Route not found: ${req.method} ${req.url}`,
+            error: 'Route not found: ' + req.url,
             available_routes: [
                 'GET  /api/test',
                 'GET  /api/segments',
@@ -282,10 +183,7 @@ const server = http.createServer((req, res) => {
                 'POST /api/campaigns/:id/send',
                 'GET  /api/dashboard/stats',
                 'GET  /api/messages',
-                'PUT  /api/terminals/:id/status',
-                'POST /api/quick-reply',
-                'GET  /api/tasks',
-                'POST /api/tasks'
+                'POST /api/quick-reply'
             ]
         }));
     });
@@ -293,25 +191,10 @@ const server = http.createServer((req, res) => {
 
 const PORT = 5000;
 server.listen(PORT, () => {
-    console.log('='.repeat(60));
-    console.log('🚀 COSMIC POS BACKEND - ALL ROUTES READY!');
-    console.log('='.repeat(60));
-    console.log(`📍 http://localhost:${PORT}`);
-    console.log('📡 ALL ENDPOINTS:');
-    console.log('   ✅ GET  /api/test');
-    console.log('   ✅ GET  /api/segments');
-    console.log('   ✅ POST /api/upload-csv');
-    console.log('   ✅ GET  /api/contacts');
-    console.log('   ✅ GET  /api/campaigns');
-    console.log('   ✅ POST /api/campaigns');
-    console.log('   ✅ POST /api/campaigns/:id/send');
-    console.log('   ✅ GET  /api/dashboard/stats');
-    console.log('   ✅ GET  /api/messages');
-    console.log('   ✅ PUT  /api/terminals/:id/status');
-    console.log('   ✅ POST /api/quick-reply');
-    console.log('   ✅ GET  /api/tasks');
-    console.log('   ✅ POST /api/tasks');
-    console.log('='.repeat(60));
-    console.log('🎯 Frontend should connect perfectly!');
-    console.log('='.repeat(60));
+    console.log('='.repeat(50));
+    console.log('🚀 COSMIC POS BACKEND - NO INSTALLATION!');
+    console.log('='.repeat(50));
+    console.log('📍 http://localhost:' + PORT);
+    console.log('✅ Ready to connect with frontend!');
+    console.log('='.repeat(50));
 }); 
