@@ -1,64 +1,47 @@
-// SIMPLE POS BACKEND - NO INSTALLATION NEEDED
+// ULTRA SIMPLE BACKEND - NO PACKAGE.JSON NEEDED
 const http = require('http');
-const fs = require('fs');
-const path = require('path');
 
 // Simple data storage
 let segments = [];
 let campaigns = [];
-let contacts = [];
-let messages = [];
 
 const server = http.createServer((req, res) => {
-    // Set CORS headers
+    // Allow all origins
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
    
-    // Handle preflight requests
+    // Handle preflight
     if (req.method === 'OPTIONS') {
         res.writeHead(200);
         res.end();
         return;
     }
    
+    // Parse JSON body
     let body = '';
-    req.on('data', chunk => {
-        body += chunk.toString();
-    });
+    req.on('data', chunk => body += chunk.toString());
    
     req.on('end', () => {
-        let jsonData = {};
+        let data = {};
         if (body && req.method === 'POST') {
-            try {
-                jsonData = JSON.parse(body);
-            } catch (e) {
-                // Ignore parse errors
-            }
+            try { data = JSON.parse(body); } catch (e) {}
         }
        
         // API Routes
         if (req.url === '/api/test' && req.method === 'GET') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
-                message: '🚀 Cosmic POS Backend - NO INSTALLATION!',
-                timestamp: new Date().toISOString(),
-                status: 'working'
+                message: '🚀 Backend WORKING!',
+                timestamp: new Date().toISOString()
             }));
             return;
         }
        
-        if (req.url === '/api/segments' && req.method === 'GET') {
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(segments));
-            return;
-        }
-       
         if (req.url === '/api/upload-csv' && req.method === 'POST') {
-            const segmentId = 'seg-' + Date.now();
             const newSegment = {
-                id: segmentId,
-                name: jsonData.segmentName || 'New Segment',
+                id: 'seg-' + Date.now(),
+                name: data.segmentName || 'Test Segment',
                 contact_count: 50,
                 created_at: new Date().toISOString()
             };
@@ -68,12 +51,14 @@ const server = http.createServer((req, res) => {
             res.end(JSON.stringify({
                 success: true,
                 segment: newSegment,
-                stats: {
-                    total: 50,
-                    successful: 47,
-                    errors: 3
-                }
+                stats: { total: 50, successful: 47, errors: 3 }
             }));
+            return;
+        }
+       
+        if (req.url === '/api/segments' && req.method === 'GET') {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(segments));
             return;
         }
        
@@ -85,18 +70,7 @@ const server = http.createServer((req, res) => {
                     customer_name: 'John Doe',
                     phone: '+2348012345678',
                     whatsapp_opt_in: true,
-                    terminals: [
-                        { id: 't1', serial_number: 'POS12345', status: 'inactive' }
-                    ]
-                },
-                {
-                    id: '2',
-                    customer_name: 'Jane Smith',
-                    phone: '+2348023456789',
-                    whatsapp_opt_in: true,
-                    terminals: [
-                        { id: 't2', serial_number: 'POS67890', status: 'contacted' }
-                    ]
+                    terminals: [{ serial_number: 'POS12345', status: 'inactive' }]
                 }
             ]));
             return;
@@ -111,8 +85,8 @@ const server = http.createServer((req, res) => {
         if (req.url === '/api/campaigns' && req.method === 'POST') {
             const newCampaign = {
                 id: 'camp-' + Date.now(),
-                name: jsonData.name || 'New Campaign',
-                template_text: jsonData.template || 'Hello {name}, return terminal {serial} for ₦5,000',
+                name: data.name || 'New Campaign',
+                template_text: data.template || 'Hello {name}',
                 status: 'draft',
                 created_at: new Date().toISOString()
             };
@@ -123,11 +97,11 @@ const server = http.createServer((req, res) => {
             return;
         }
        
-        if (req.url.startsWith('/api/campaigns/') && req.url.endsWith('/send') && req.method === 'POST') {
+        if (req.url.startsWith('/api/campaigns/') && req.method === 'POST') {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
                 success: true,
-                message: 'Campaign sent successfully!',
+                message: 'Campaign sent!',
                 messagesSent: 25
             }));
             return;
@@ -151,10 +125,9 @@ const server = http.createServer((req, res) => {
                 {
                     id: '1',
                     contact_name: 'John Doe',
-                    content: 'Hello, please return your terminal POS12345 for ₦5,000',
+                    content: 'Test message',
                     status: 'sent',
-                    sent_at: new Date().toISOString(),
-                    direction: 'outbound'
+                    sent_at: new Date().toISOString()
                 }
             ]));
             return;
@@ -164,37 +137,23 @@ const server = http.createServer((req, res) => {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({
                 success: true,
-                message: 'Quick reply sent successfully!'
+                message: 'Quick reply sent!'
             }));
             return;
         }
        
-        // 404 for unknown routes
+        // 404
         res.writeHead(404, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
-            error: 'Route not found: ' + req.url,
-            available_routes: [
-                'GET  /api/test',
-                'GET  /api/segments',
-                'POST /api/upload-csv',
-                'GET  /api/contacts',
-                'GET  /api/campaigns',
-                'POST /api/campaigns',
-                'POST /api/campaigns/:id/send',
-                'GET  /api/dashboard/stats',
-                'GET  /api/messages',
-                'POST /api/quick-reply'
-            ]
-        }));
+        res.end(JSON.stringify({ error: 'Route not found' }));
     });
 });
 
 const PORT = 5000;
 server.listen(PORT, () => {
     console.log('='.repeat(50));
-    console.log('🚀 COSMIC POS BACKEND - NO INSTALLATION!');
+    console.log('🚀 BACKEND RUNNING - NO PACKAGE.JSON!');
     console.log('='.repeat(50));
     console.log('📍 http://localhost:' + PORT);
-    console.log('✅ Ready to connect with frontend!');
+    console.log('✅ Ready for frontend!');
     console.log('='.repeat(50));
 }); 
